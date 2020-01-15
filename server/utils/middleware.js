@@ -9,12 +9,20 @@ const unknownEndpoint = (req,res)=>{
     return res.status(404).send({error: 'unknown end point'});
 };
 const errorHandler = (err,req,res,next)=>{
-
     console.log(err);
     next();
 };
+
+const showError = (err)=>{
+    console.log('--------------------------------------------------');
+    console.log(err);
+    console.log('--------------------------------------------------');
+};
+
+
 module.exports = {
     requestLogger,
     unknownEndpoint,
-    errorHandler
-};
+    errorHandler,
+    showError
+}

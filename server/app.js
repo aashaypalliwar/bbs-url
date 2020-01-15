@@ -5,8 +5,10 @@ const helmet = require('helmet');
 const cookieParser = require('cookie-parser');
 const passport = require('passport');
 const middleware = require('./utils/middleware');
-
-
+// const { promisify } = require('util');
+// const dns =require('dns');
+const validate = require('./controllers/validateURLController');
+// const dnsLookup = promisify(dns.lookup);
 const app = express();
 
 app.use(helmet());
@@ -20,9 +22,23 @@ app.use(passport.initialize());
 app.use(express.static("static"));
 app.use(middleware.requestLogger);
 
-app.get('/aashay',(req,res)=>{
-    res.status(307);
-    res.redirect('https://aashaypalliwar.github.io');
+// 1. api
+
+
+// 2. redirect block
+
+
+
+
+
+app.get('/:id', async (req,res,next)=>{
+    // res.status(307);
+    // res.redirect('https://aashaypalliwar.github.io');
+    // dnsLookup('http://google.com/').then( (err, addresses, family)=> {
+    //         console.log(addresses);
+    // }).catch(err => next(err));
+    //console.log(validate.dnsCheck('google.com'));
+
 });
 
 app.use(middleware.unknownEndpoint);

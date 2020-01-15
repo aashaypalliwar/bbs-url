@@ -3,7 +3,7 @@ const mongoose = require('mongoose');
 const suborgSchema = new mongoose.Schema({
     name: {
         type: String,
-        required: [true, 'Sub-org should have a name.']
+        required: true
     },
     description: {
         type: String,
