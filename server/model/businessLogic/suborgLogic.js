@@ -16,7 +16,7 @@ const getAllSuborgs = async () => {
 // Get information about a given sub-organization
 const getSuborgInfo = async (suborg) => {
     try {
-        let suborgInfo = await Suborg.find({'name': suborg}).lean();
+        let suborgInfo = await Suborg.find({'name': suborg.name}).lean();
         return suborgInfo;
     }
     catch(err){
@@ -31,6 +31,7 @@ const createNewSuborg = async (suborgData) => {
             {
                 'name' : suborgData.name,
                 'description' : suborgData.description,
+                'email': suborgData.email,
                 'shortName': suborgData.shortName,
                 'numberOfURLs': suborgData.numberOfURLs
             });
@@ -48,6 +49,7 @@ const updateSuborg = async (suborgData) => {
         let updatedSuborgInfo = await Suborg.findByIdAndUpdate(suborgData._id, {
             'name' : suborgData.name,
             'description' : suborgData.description,
+            'email': suborgData.email,
             'shortName': suborgData.shortName
         }, {new: true});
         return updatedSuborgInfo;

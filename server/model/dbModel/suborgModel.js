@@ -13,6 +13,10 @@ const suborgSchema = new mongoose.Schema({
       type: String,
       required: true
     },
+    email: {
+      type: String,
+      required:true
+    },
     numberOfURLs: {
         type: Number,
         default : 0
