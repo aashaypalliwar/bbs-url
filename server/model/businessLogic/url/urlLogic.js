@@ -70,8 +70,13 @@ const getRedirectURL = async (endpoint) => {
         let urlData = await URL.findOne({shortURLEndPoint: endpoint}).lean();
         let urlObj = {
             shortURLEndPoint: endpoint,
-            originalURL: urlData.originalURL
+            originalURL: null
         };
+        if(urlData !== null)
+            urlObj = {
+                shortURLEndPoint: endpoint,
+                originalURL: urlData.originalURL
+            };
         return urlObj;
     }
     catch(err){

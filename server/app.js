@@ -5,6 +5,10 @@ const helmet = require('helmet');
 const cookieParser = require('cookie-parser');
 const passport = require('passport');
 const middleware = require('./utils/middleware');
+const getRedirectURL = require('./model/businessLogic/url/urlLogic').getRedirectURL;
+
+
+
 const { promisify } = require('util');
 const dns =require('dns');
 const dnsLookup = promisify(dns.lookup);
@@ -27,10 +31,37 @@ app.use(express.static("static"));
 app.use(middleware.requestLogger);
 
 
-// 1. api
+// CRUD handler
 
 
-// 2. redirect block
+// General redirect
+app.get('/:code', async (req,res,next)=>{
+    try{
+        let { shortURLEndPoint, originalURL } = await getRedirectURL(req.params.code);
+        if(originalURL !== null)
+            res.redirect(originalURL);
+        else
+            res.sendStatus(404);
+    }
+    catch(err){
+        next(err);
+    }
+});
+
+// Redirect for custom URL (sub-organizations)
+app.get('/:suborg/:code', async (req,res,next)=>{
+    try{
+        let { shortURLEndPoint, originalURL } = await getRedirectURL(req.params.suborg+'/'+req.params.code);
+        console.log(req.params.suborg+'/'+req.params.code);
+        if(originalURL !== null)
+            res.redirect(originalURL);
+        else
+            res.sendStatus(404);
+    }
+    catch(err){
+        next(err);
+    }
+});
 
 
 
