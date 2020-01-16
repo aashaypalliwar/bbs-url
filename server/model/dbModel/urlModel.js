@@ -3,26 +3,30 @@ const mongoose = require('mongoose');
 const urlSchema = new mongoose.Schema({
     email: {
         type: String,
-        required: [true, 'User should have valid email address']
+        required: true
     },
-    user: {
+    name: {
         type: String,
-        required: [true, 'User should have a name.']
+        required: true
+    },
+    userID: {
+        type: String,
+        required: true
     },
     suborg: {
         type: String,
-        required: [true, 'URL must belong to a particular org'],
+        required: true,
         default : 'none'
     },
-    shortURL: {
+    shortURLEndPoint: {
         type: String,
-        required: [true, 'URL must be shortened']
+        required: true
     },
     originalURL: {
         type: String,
-        required: [true, 'Original URL is necessary']
+        required: true
     },
-    views: {
+    hits: {
         type: Number,
         default : 0
     },

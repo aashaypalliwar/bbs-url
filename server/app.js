@@ -5,10 +5,9 @@ const helmet = require('helmet');
 const cookieParser = require('cookie-parser');
 const passport = require('passport');
 const middleware = require('./utils/middleware');
-// const { promisify } = require('util');
-// const dns =require('dns');
-const validate = require('./controllers/validateURLController');
-// const dnsLookup = promisify(dns.lookup);
+const { promisify } = require('util');
+const dns =require('dns');
+const dnsLookup = promisify(dns.lookup);
 const app = express();
 
 app.use(helmet());
@@ -38,6 +37,13 @@ app.get('/:id', async (req,res,next)=>{
     //         console.log(addresses);
     // }).catch(err => next(err));
     //console.log(validate.dnsCheck('google.com'));
+    try{
+        let data = await dnsLookup('ghgfszn.com');
+        console.log(data);
+    }
+    catch (e) {
+        next(e);
+    }
 
 });
 

@@ -16,7 +16,7 @@ const getAllUsers = async () => {
 // Get information about a given user
 const getUserInfo = async (user) => {
     try {
-        let userInfo = await User.find({'name': user.name}).lean();
+        let userInfo = await User.find({_id: user._id}).lean();
         return userInfo;
     }
     catch(err){
@@ -25,16 +25,16 @@ const getUserInfo = async (user) => {
 };
 
 // Create a new user
-const createNewUser = async (userData) => {
+const createNewUser = async (user) => {
     try{
         let newUser = new User(
             {
-                'name' : userData.name,
-                'password' : userData.password,
+                'name' : user.name,
+                'password' : user.password,
                 'email': user.email
             });
-        let newUserData = await User.save();
-        return newUserData;
+        let newUserInfo = await newUser.save();
+        return newUserInfo;
     }
     catch(err){
         showError(err);
@@ -42,11 +42,11 @@ const createNewUser = async (userData) => {
 };
 
 // Update a given user info
-const updateUser = async (userData) => {
+const updateUser = async (user) => {
     try{
-        let updatedUserInfo = await User.findByIdAndUpdate(userData._id, {
-            'name' : userData.name,
-            'blacklisted': userData.blacklisted
+        let updatedUserInfo = await User.findByIdAndUpdate(user._id, {
+            'name' : user.name,
+            'blacklisted': user.blacklisted
         }, {new: true});
         return updatedUserInfo;
     }
@@ -56,10 +56,10 @@ const updateUser = async (userData) => {
 };
 
 //Increment the URL count of a user
-const incrementUserURL = async (userData) => {
+const incrementUserURL = async (user) => {
     try{
         let updatedUserInfo = await User.findOneAndUpdate(
-            { name: userData.name},
+            { _id: user._id},
             { $inc: { numberOfURLs: 1 }  },
             {new: true});
         return updatedUserInfo;
@@ -70,10 +70,10 @@ const incrementUserURL = async (userData) => {
 };
 
 //Decrement the URL count of a user
-const decrementUserURL = async (userData) => {
+const decrementUserURL = async (user) => {
     try{
         let updatedUserInfo = await User.findOneAndUpdate(
-            { name: userData.name},
+            { _id: user._id},
             { $inc: { numberOfURLs: -1 }  },
             {new: true});
 
@@ -84,6 +84,17 @@ const decrementUserURL = async (userData) => {
     }
 };
 
+//Delete a given user
+const deleteUser = async (user) => {
+    try{
+        await User.deleteOne({ _id: user._id});
+        console.log(`deleted user with id : ${user._id}`);
+    }
+    catch(err){
+        showError(err);
+    }
+}
+
 //update password
 
 module.exports = {
@@ -92,5 +103,6 @@ module.exports = {
     createNewUser,
     updateUser,
     incrementUserURL,
-    decrementUserURL
+    decrementUserURL,
+    deleteUser
 };

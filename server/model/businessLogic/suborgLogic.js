@@ -16,7 +16,7 @@ const getAllSuborgs = async () => {
 // Get information about a given sub-organization
 const getSuborgInfo = async (suborg) => {
     try {
-        let suborgInfo = await Suborg.find({'name': suborg.name}).lean();
+        let suborgInfo = await Suborg.find({_id: suborg._id}).lean();
         return suborgInfo;
     }
     catch(err){
@@ -25,18 +25,18 @@ const getSuborgInfo = async (suborg) => {
 };
 
 // Create a new sub-organization
-const createNewSuborg = async (suborgData) => {
+const createNewSuborg = async (suborg) => {
     try{
         let newSubOrg = new Suborg(
             {
-                'name' : suborgData.name,
-                'description' : suborgData.description,
-                'email': suborgData.email,
-                'shortName': suborgData.shortName,
-                'numberOfURLs': suborgData.numberOfURLs
+                'name' : suborg.name,
+                'description' : suborg.description,
+                'email': suborg.email,
+                'shortName': suborg.shortName,
+                'numberOfURLs': suborg.numberOfURLs
             });
-        suborgList = await Suborg.save();
-        return suborgList;
+        let suborgInfo = await newSubOrg.save();
+        return suborgInfo;
     }
     catch(err){
         showError(err);
@@ -44,13 +44,13 @@ const createNewSuborg = async (suborgData) => {
 };
 
 // Update a given sub-organization
-const updateSuborg = async (suborgData) => {
+const updateSuborg = async (suborg) => {
     try{
-        let updatedSuborgInfo = await Suborg.findByIdAndUpdate(suborgData._id, {
-            'name' : suborgData.name,
-            'description' : suborgData.description,
-            'email': suborgData.email,
-            'shortName': suborgData.shortName
+        let updatedSuborgInfo = await Suborg.findByIdAndUpdate(suborg._id, {
+            'name' : suborg.name,
+            'description' : suborg.description,
+            'email': suborg.email,
+            'shortName': suborg.shortName
         }, {new: true});
         return updatedSuborgInfo;
     }
@@ -60,10 +60,10 @@ const updateSuborg = async (suborgData) => {
 };
 
 //Increment the URL count of the sub-org
-const incrementSuborgURL = async (suborgData) => {
+const incrementSuborgURL = async (suborg) => {
     try{
         let updatedSuborgInfo = await Suborg.findOneAndUpdate(
-            { name: suborgData.name},
+            { _id: suborg._id},
             { $inc: { numberOfURLs: 1 }  },
             {new: true});
 
@@ -75,14 +75,25 @@ const incrementSuborgURL = async (suborgData) => {
 };
 
 //Decrement the URL count of sub-org
-const decrementSuborgURL = async (suborgData) => {
+const decrementSuborgURL = async (suborg) => {
     try{
         let updatedSuborgInfo = await Suborg.findOneAndUpdate(
-            { name: suborgData.name},
+            { _id: suborg._id},
             { $inc: { numberOfURLs: -1 }  },
             {new: true});
 
         return updatedSuborgInfo;
+    }
+    catch(err){
+        showError(err);
+    }
+};
+
+//Delete a given sub-organization
+const deleteSuborg = async (suborg) => {
+    try{
+         await Suborg.deleteOne({ _id: suborg._id});
+         console.log(`deleted file with id : ${suborg._id}`);
     }
     catch(err){
         showError(err);
@@ -95,5 +106,6 @@ module.exports = {
     createNewSuborg,
     updateSuborg,
     incrementSuborgURL,
-    decrementSuborgURL
+    decrementSuborgURL,
+    deleteSuborg
 };
