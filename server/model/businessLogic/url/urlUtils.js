@@ -30,6 +30,7 @@ const preservedUrls = [
 const alreadyExist = async (shortURLEndPoint) => {
     try{
         let count = await URL.countDocuments({ shortURLEndPoint: shortURLEndPoint }).lean();
+        console.log(typeof count);
         if(count > 0)
             return 1;
         return 0;
@@ -39,7 +40,7 @@ const alreadyExist = async (shortURLEndPoint) => {
     }
 }
 
-const validateSuborgUrlUpdate = async (suborg, shortURLEndPoint ) => {
+const validateSuborgUrlUpdate = async (shortURLEndPoint ) => {
     // Validate URL existence
     if (!shortURLEndPoint)
         return 0;
@@ -57,7 +58,8 @@ const validateSuborgUrlUpdate = async (suborg, shortURLEndPoint ) => {
         return 0;
 
     // Check if already exist
-    if(alreadyExist(shortURLEndPoint))
+    let existsAlready = await alreadyExist(shortURLEndPoint);
+    if(existsAlready)
         return 0;
 
     return 1;
@@ -76,12 +78,13 @@ const dnsCheck = async (url) => {
 }
 
 const generateEndpoint = async () =>{
-    const endpoint = generate(
+    const endpoint = await generate(
         "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890",
         Number(process.env.LINK_LENGTH) || 6
     );
-    if (!alreadyExist(endpoint)) return endpoint;
-    return generateEndpoint();
+    let existsAlready = await alreadyExist(endpoint)
+    if (!existsAlready) return endpoint;
+        return generateEndpoint();
 }
 
 

@@ -8,6 +8,11 @@ const middleware = require('./utils/middleware');
 const { promisify } = require('util');
 const dns =require('dns');
 const dnsLookup = promisify(dns.lookup);
+const generateEndpoint = require('./model/businessLogic/url/urlUtils').generateEndpoint;
+const alreadyExist = require('./model/businessLogic/url/urlUtils').alreadyExist;
+const dnsCheck = require('./model/businessLogic/url/urlUtils').dnsCheck;
+const validateSuborgUrlUpdate = require('./model/businessLogic/url/urlUtils').validateSuborgUrlUpdate;
+
 const app = express();
 
 app.use(helmet());
@@ -21,6 +26,7 @@ app.use(passport.initialize());
 app.use(express.static("static"));
 app.use(middleware.requestLogger);
 
+
 // 1. api
 
 
@@ -30,19 +36,15 @@ app.use(middleware.requestLogger);
 
 
 
-app.get('/:id', async (req,res,next)=>{
-    // res.status(307);
-    // res.redirect('https://aashaypalliwar.github.io');
-    // dnsLookup('http://google.com/').then( (err, addresses, family)=> {
-    //         console.log(addresses);
-    // }).catch(err => next(err));
-    //console.log(validate.dnsCheck('google.com'));
+app.get('/123', async (req,res,next)=>{
     try{
-        let data = await dnsLookup('ghgfszn.com');
-        console.log(data);
+        let endpoint = 'f758dd';
+        let result = await validateSuborgUrlUpdate(endpoint);
+        console.log(result)
+        res.json(result);
     }
-    catch (e) {
-        next(e);
+    catch(err){
+        next(err);
     }
 
 });
