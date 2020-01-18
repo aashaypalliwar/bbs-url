@@ -28,11 +28,11 @@ const getURLsByUser = async (user) => {
 };
 
 // Blacklist a URL
-const blacklistURL = async (url) => {
+const blacklistURL = async (id) => {
     try{
-        let updatedInfo = await URL.findByIdAndUpdate(url._id, {
+        let updatedInfo = await URL.findByIdAndUpdate(id, {
            blacklisted: true
-        });
+        }, {new : true});
         return updatedInfo;
     }
     catch (err) {
@@ -41,11 +41,11 @@ const blacklistURL = async (url) => {
 }
 
 // Whitelist a URL
-const whitelistURL = async (url) => {
+const whitelistURL = async (id) => {
     try{
-        let updatedInfo = await URL.findByIdAndUpdate(url._id, {
+        let updatedInfo = await URL.findByIdAndUpdate(id, {
             blacklisted: false
-        });
+        }, {new : true});
         return updatedInfo;
     }
     catch (err) {
@@ -54,10 +54,10 @@ const whitelistURL = async (url) => {
 }
 
 //Delete url
-const deleteURL = async (url) => {
+const deleteURL = async (id) => {
     try{
-        await URL.deleteOne({ _id: url._id});
-        console.log(`deleted url with id : ${url._id}`);
+        await URL.deleteOne({ _id: id});
+        console.log(`deleted url with id : ${id}`);
     }
     catch(err){
         showError(err);
@@ -67,7 +67,7 @@ const deleteURL = async (url) => {
 // Get redirect URL
 const getRedirectURL = async (endpoint) => {
     try {
-        let urlData = await URL.findOne({shortURLEndPoint: endpoint}).lean();
+        let urlData = await URL.findOne({shortURLEndPoint: endpoint, blacklisted : false}).lean();
         let urlObj = {
             shortURLEndPoint: endpoint,
             originalURL: null

@@ -1,5 +1,6 @@
 const mongoose = require('mongoose');
 const User = require('../dbModel/userModel');
+const URL = require('../dbModel/urlModel')
 const showError = require('../../utils/middleware').showError;
 
 // Get information about all the users
@@ -71,14 +72,14 @@ const incrementUserURL = async (id) => {
 };
 
 //Decrement the URL count of a user
-const decrementUserURL = async (user) => {
+const decrementUserURL = async (id) => {
     try{
         let updatedUserInfo = await User.findOneAndUpdate(
-            { _id: user._id},
+            { _id: id},
             { $inc: { numberOfURLs: -1 }  },
             {new: true});
 
-        return updatedSuborgInfo;
+        return updatedUserInfo;
     }
     catch(err){
         showError(err);
@@ -86,12 +87,45 @@ const decrementUserURL = async (user) => {
 };
 
 //Delete a given user
-const deleteUser = async (user) => {
+const deleteUser = async (id) => {
     try{
-        await User.deleteOne({ _id: user._id});
-        console.log(`deleted user with id : ${user._id}`);
+        await URL.deleteMany({userID : id});
+        await User.deleteOne({ _id: id});
+        console.log(`deleted user with id : ${id}`);
     }
     catch(err){
+        showError(err);
+    }
+}
+
+//Blacklist a user
+const blacklistUser = async (id) => {
+    try{
+        let updatedUserInfo = await User.findByIdAndUpdate(id, {
+            blacklisted: true
+        }, {new : true});
+        await URL.updateMany({userID: id}, {
+            blacklisted: true
+        });
+        return updatedUserInfo;
+    }
+    catch (err) {
+        showError(err);
+    }
+}
+
+// Whitelist a User
+const whitelistUser = async (id) => {
+    try{
+        let updatedUserInfo = await User.findByIdAndUpdate(id, {
+            blacklisted: false
+        }, {new : true});
+        await URL.updateMany({userID: id}, {
+            blacklisted: false
+        });
+        return updatedUserInfo;
+    }
+    catch (err) {
         showError(err);
     }
 }
@@ -105,5 +139,8 @@ module.exports = {
     updateUser,
     incrementUserURL,
     decrementUserURL,
-    deleteUser
+    deleteUser,
+    whitelistUser,
+    blacklistUser
+
 };
