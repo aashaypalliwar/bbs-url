@@ -14,9 +14,9 @@ const getAllUsers = async () => {
 };
 
 // Get information about a given user
-const getUserInfo = async (user) => {
+const getUserInfo = async (email) => {
     try {
-        let userInfo = await User.find({_id: user._id}).lean();
+        let userInfo = await User.findOne({email: email}).select('+password');
         return userInfo;
     }
     catch(err){
@@ -31,6 +31,7 @@ const createNewUser = async (user) => {
             {
                 'name' : user.name,
                 'password' : user.password,
+                'passwordConfirm' : user.passwordConfirm,
                 'email': user.email
             });
         let newUserInfo = await newUser.save();
@@ -56,10 +57,10 @@ const updateUser = async (user) => {
 };
 
 //Increment the URL count of a user
-const incrementUserURL = async (user) => {
+const incrementUserURL = async (id) => {
     try{
         let updatedUserInfo = await User.findOneAndUpdate(
-            { _id: user._id},
+            { _id: id},
             { $inc: { numberOfURLs: 1 }  },
             {new: true});
         return updatedUserInfo;

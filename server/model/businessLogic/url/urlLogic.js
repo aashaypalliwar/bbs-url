@@ -72,6 +72,7 @@ const getRedirectURL = async (endpoint) => {
             shortURLEndPoint: endpoint,
             originalURL: null
         };
+
         if(urlData !== null)
             urlObj = {
                 shortURLEndPoint: endpoint,
@@ -85,12 +86,12 @@ const getRedirectURL = async (endpoint) => {
 }
 
 //Increment hits on URL
-const incrementURLHits = async (url) => {
+const incrementURLHits = async (shortURL) => {
     try{
         let updatedURLInfo = await URL.findOneAndUpdate(
-            { _id: url._id},
+            { shortURLEndPoint: shortURL},
             { $inc: { hits: 1 }  },
-            {new: true});
+            {new: true, useFindAndModify: false});
         return updatedURLInfo;
     }
     catch(err){
@@ -116,25 +117,27 @@ const updateSuborgURL = async (url, newEndpoint) => {
 }
 
 //Create a new short URL
-const createNewShortURL = async (url) => {
+const createNewShortURL = async (urlInfo) => {
     try{
-
-        let isValid = await dnsCheck(url.originalURL);
+        //throw error
+        let isValid = await dnsCheck(urlInfo.originalURL);
         if(!isValid){
             console.log('not valid');
             return;
         }
+        if(!urlInfo.originalURL.startsWith('https://') && !urlInfo.originalURL.startsWith('http://'))
+            urlInfo.originalURL = 'https://'+urlInfo.originalURL;
 
         let shortURLEndPoint = await generateEndpoint();
 
         let newURL = new URL(
             {
-                email: url.email,
-                name: url.name,
-                userID: url.userID,
-                suborg: url.suborg,
+                email: urlInfo.email,
+                name: urlInfo.name,
+                userID: urlInfo._id,
+                suborg: urlInfo.suborg,
                 shortURLEndPoint: shortURLEndPoint,
-                originalURL: url.originalURL,
+                originalURL: urlInfo.originalURL,
             });
         let newURLData = await newURL.save();
         return newURLData;
