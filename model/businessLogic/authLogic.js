@@ -114,7 +114,7 @@ const forgotPassword = async (req, res, next) => {
 
     // 3) Send it to user's email
 
-    const message = `Forgot your password? Enter this One Time Token in the prompt with your new password and passwordConfirm to reset.\nIf you didn't forget your password, please ignore this email!`;
+    const message = `Forgot your password? Enter this One Time Token in the prompt with your new password and passwordConfirm to reset.\n${resetToken}\nIf you didn't forget your password, please ignore this email!`;
 
     await sendEmail({
         email: user.email,
