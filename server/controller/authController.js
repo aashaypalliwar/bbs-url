@@ -6,9 +6,10 @@ const AppError = require('../utils/appError');
 const config = require('../utils/config');
 const { createNewUser, getUserInfo } = require('../model/businessLogic/userLogic');
 const {
-    signToken,
     createSendToken,
-    protect
+    updatePassword,
+    resetPassword,
+    forgotPassword
 } = require('../model/businessLogic/authLogic');
 // const sendEmail = require('./../utils/email');
 const authRouter = require('express').Router();
@@ -42,8 +43,10 @@ authRouter.post('/login', async (req, res, next) => {
     createSendToken(user, 200, res);
 });
 
+authRouter.post('/forgotPassword', forgotPassword);
 
+authRouter.post('/resetPassword', resetPassword);
 
-
+authRouter.post('/updatePassword', updatePassword);
 
 module.exports = authRouter;
