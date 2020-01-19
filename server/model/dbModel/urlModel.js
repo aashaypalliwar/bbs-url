@@ -3,15 +3,15 @@ const mongoose = require('mongoose');
 const urlSchema = new mongoose.Schema({
     email: {
         type: String,
-        required: true
+        required: [true, "Every URL must be related to an email"]
     },
     name: {
         type: String,
-        required: true
+        required: [true, "Every URL must have a creator"]
     },
     userID: {
         type: String,
-        required: true
+        required: [true, "URL's creator must have a valid userID"]
     },
     suborg: {
         type: String,

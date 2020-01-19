@@ -20,6 +20,10 @@ const userSchema = new mongoose.Schema({
         enum: ['guest', 'user', 'suborg', 'admin'],
         default: 'user'
     },
+    suborg: {
+        type: String,
+        default: 'none'
+    },
     password: {
         type: String,
         required: [true, 'Please provide a password'],

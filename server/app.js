@@ -1,5 +1,4 @@
 const express = require('express');
-const bodyParser = require('body-parser');
 const cors = require('cors');
 const helmet = require('helmet');
 const cookieParser = require('cookie-parser');
@@ -12,17 +11,9 @@ const middleware = require('./utils/middleware');
 const { getRedirectURL } = require('./model/businessLogic/url/urlLogic');
 const config = require('./utils/config');
 const apiRouter = require('./controller/apiController');
-
-
-
-const { promisify } = require('util');
-const dns =require('dns');
-const dnsLookup = promisify(dns.lookup);
-const generateEndpoint = require('./model/businessLogic/url/urlUtils').generateEndpoint;
-const alreadyExist = require('./model/businessLogic/url/urlUtils').alreadyExist;
-const dnsCheck = require('./model/businessLogic/url/urlUtils').dnsCheck;
-const validateSuborgUrlUpdate = require('./model/businessLogic/url/urlUtils').validateSuborgUrlUpdate;
+const { generateEndpoint, alreadyExist, dnsCheck } = require('./model/businessLogic/url/urlUtils');
 const { incrementURLHits } = require('./model/businessLogic/url/urlLogic');
+const AppError = require('./utils/appError');
 
 const app = express();
 
@@ -31,7 +22,7 @@ app.use(cors());
 
 //Rate limiter
 let limit = 100;
-if(config.NODE_ENV === 'dev')
+if(config.NODE_ENV === 'development')
     limit = 1000;
 const limiter = rateLimit({
     max: limit,
@@ -68,20 +59,18 @@ app.use(cookieParser());
 app.use(express.static("static"));
 app.use(middleware.requestLogger);
 
-
 // CRUD handler
 app.use('/api', apiRouter);
 
 // General redirect
 app.get('/:code', async (req,res,next)=>{
     try {
-        let {shortURLEndPoint, originalURL} = await getRedirectURL(req.params.code);
-        if (originalURL !== null) {
-            await incrementURLHits(req.params.code);
+        let originalURL = await getRedirectURL(req.params.code, next);
+        console.log(originalURL);
+        if (originalURL) {
             res.status(301).redirect(originalURL);
+            await incrementURLHits(req.params.code, next);
         }
-        else
-            res.sendStatus(404);
     }
     catch(err){
         next(err);
@@ -91,37 +80,18 @@ app.get('/:code', async (req,res,next)=>{
 // Redirect for custom URL (sub-organizations)
 app.get('/:suborg/:code', async (req,res,next)=>{
     try{
-        let { shortURLEndPoint, originalURL } = await getRedirectURL(req.params.suborg+'/'+req.params.code);
-        console.log(req.params.suborg+'/'+req.params.code);
-        if(originalURL !== null) {
-            await incrementURLHits(req.params.code);
+        let originalURL = await getRedirectURL(req.params.suborg+'/'+req.params.code, next);
+        if(originalURL) {
             res.status(301).redirect(originalURL);
+            await incrementURLHits(req.params.suborg+'/'+req.params.code, next);
         }
-        else
-            res.sendStatus(404);
     }
     catch(err){
         next(err);
     }
-});
-
-
-
-
-
-app.get('/123', async (req,res,next)=>{
-    try{
-        let endpoint = 'f758dd';
-        let result = await validateSuborgUrlUpdate(endpoint);
-        console.log(result)
-        res.json(result);
-    }
-    catch(err){
-        next(err);
-    }
-
 });
 
 app.use(middleware.unknownEndpoint);
 app.use(middleware.errorHandler);
+
 module.exports = app;

@@ -50,6 +50,7 @@
     ]
   },
   "devDependencies": {
+    "ndb": "^1.1.5",
     "nodemon": "^2.0.2"
   }
 }
