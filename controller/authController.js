@@ -23,7 +23,6 @@ authRouter.post('/signup', async (req, res, next) => {
     catch(err){
         return new AppError('something went wrong', 400);
     }
-
 });
 
 authRouter.post('/login', async (req, res, next) => {

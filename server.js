@@ -11,6 +11,7 @@ console.log("Waiting for connection to MongoDB");
 console.log(config.MONGODB_URI);
 
 mongoose.connect(config.MONGODB_URI, { useNewUrlParser: true, useUnifiedTopology: true }).then(() => {
+    console.log(config.MONGODB_URI);
     console.log("Connected to MongoDB!");
     console.log("Starting webserver..");
     server.listen(config.PORT,()=>{
