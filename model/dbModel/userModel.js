@@ -21,8 +21,7 @@ const userSchema = new mongoose.Schema({
         default: 'user'
     },
     suborg: {
-        type: String,
-        default: 'none'
+        type: [String]
     },
     password: {
         type: String,

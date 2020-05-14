@@ -5,15 +5,15 @@ const { createNewShortURL, getURLsByUser, deleteURL } = require('../model/busine
 
 const userRouter = require('express').Router();
 
-//userRouter.use(protect);
-//change protect routine.
+userRouter.use(protect);
+
 //Create a new short URL
 userRouter.post('/url', async (req,res,next) => {
     try{
         let urlInfo = {
-            email: req.body.email,
-            name: req.body.name,
-            userID: req.body._id,
+            email: req.user.email,
+            name: req.user.name,
+            userID: req.user._id,
             originalURL: req.body.originalURL,
             wantCustomURL: req.body.wantCustomURL,
             customURL: req.body.customURL
@@ -24,7 +24,6 @@ userRouter.post('/url', async (req,res,next) => {
             res.status(200).json({
                 newURLData
             });
-            //await incrementUserURL(req.user._id, next);
         }
     }
     catch(err){
@@ -50,12 +49,11 @@ userRouter.get('/url', async (req,res,next) => {
 //Delete a previously created short URL
 userRouter.delete('/url', async (req,res,next) => {
     try{
-        let deletedURL = await deleteURL(req.body._id, req.user._id, next);
+        let deletedURL = await deleteURL(req.body._id, req.user._id, 'none', next);
         if(deletedURL) {
             res.status(204).json({
                 status: 'deleted'
             });
-            await decrementUserURL(req.user._id);
         }
     }
     catch(err){

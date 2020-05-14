@@ -7,9 +7,9 @@ let EMAIL_USERNAME = process.env.EMAIL_USERNAME || '50a10f7fd880b1';
 let EMAIL_PASSWORD = process.env.EMAIL_PASSWORD || 'c3aa495fc71b0d';
 let NODE_ENV = process.env.NODE_ENV || 'production';
 let JWT_SECRET = process.env.JWT_SECRET || 'my-very-long-string-secret-super-strong-wohooo';
-let JWT_EXPIRES_IN = process.env.JWT_EXPIRES_IN || 100*60*1000;
+let JWT_EXPIRES_IN = process.env.JWT_EXPIRES_IN || 100*100*60*1000;
 let MONGODB_URI = process.env.MONGODB_URI || 'mongodb://localhost:27017';
-let JWT_COOKIE_EXPIRES_IN = process.env.JWT_COOKIE_EXPIRES_IN || 2;
+let JWT_COOKIE_EXPIRES_IN = process.env.JWT_COOKIE_EXPIRES_IN || 100*100*60*1000;
 
 console.log(PORT);
 

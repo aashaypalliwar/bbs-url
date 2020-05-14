@@ -21,6 +21,7 @@ authRouter.post('/signup', async (req, res, next) => {
         createSendToken(newUser, 201, res);
     }
     catch(err){
+        console.log(err);
         return new AppError('something went wrong', 400);
     }
 });

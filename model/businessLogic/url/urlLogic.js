@@ -2,6 +2,9 @@ const URL = require('../../dbModel/urlModel');
 const AppError = require('../../../utils/appError');
 const validateSuborgUrlUpdate = require('./urlUtils').validateSuborgUrlUpdate;
 const { isReserved, alreadyExist, dnsCheck, generateEndpoint } = require('./urlUtils');
+const { incrementUserURL, decrementUserURL } = require('../userLogic');
+const { incrementSuborgURL, decrementSuborgURL } = require('../suborgLogic');
+
 
 // Get all the URLs
 const getAllURLs = async (next) => {
@@ -60,12 +63,15 @@ const whitelistURL = async (id, next) => {
 }
 
 //Delete url
-const deleteURL = async (id, userID, next) => {
+const deleteURL = async (id, userID, suborg, next) => {
     try{
-        let deletedURL = await URL.deleteOne({ _id: id, userID: userID});
+        let deletedURL = await URL.deleteOne({ _id: id, userID: userID, suborg: suborg});
         if(!deletedURL)
             return next(new AppError("Failed to delete. Please try again", 500));
         console.log(`deleted url with id : ${id}`);
+        await decrementUserURL(userID, next);
+        if(suborg !== 'none')
+            await decrementSuborgURL(suborg, next);
         return deletedURL;
     }
     catch(err){
@@ -91,7 +97,7 @@ const incrementURLHits = async (shortURL, next) => {
     try{
         let updatedURLInfo = await URL.findOneAndUpdate(
             { shortURLEndPoint: shortURL},
-            { $inc: { hits: 1 }  },
+            { $inc: { hits: 1 }, lastHitAt: Date.now() },
             {new: true, useFindAndModify: false});
         if(!updatedURLInfo)
             return next(new AppError("Failed to update. Please try again", 500));
@@ -124,7 +130,7 @@ const updateSuborgURL = async (url, newEndpoint, next) => {
 //Create a new short URL
 const createNewShortURL = async (urlInfo, next) => {
     try{
-        if(!urlInfo.originalURL.startsWith('https://') && !urlInfo.originalURL.startsWith('http://'))
+        if(!urlInfo.originalURL.startsWith('https://') && !urlInfo.originalURL.startsWith('http://') && !urlInfo.originalURL.startsWith('ftp://'))
             urlInfo.originalURL = 'https://'+urlInfo.originalURL;
 
         let isValid = await dnsCheck(urlInfo.originalURL);
@@ -132,7 +138,7 @@ const createNewShortURL = async (urlInfo, next) => {
             return next(new AppError("Original URL doesn't exist", 400));
         }
 
-        let shortURLEndPoint = "";
+        let shortURLEndPoint;
         if(urlInfo.wantCustomURL){
             shortURLEndPoint = urlInfo.customURL
             if(isReserved(shortURLEndPoint)){
@@ -150,14 +156,14 @@ const createNewShortURL = async (urlInfo, next) => {
             {
                 email: urlInfo.email,
                 name: urlInfo.name,
-                userID: urlInfo._id,
-                suborg: urlInfo.suborg,
+                userID: urlInfo.userID,
                 shortURLEndPoint: shortURLEndPoint,
                 originalURL: urlInfo.originalURL
             });
         let newURLData = await newURL.save();
         if(!newURLData)
             return next(new AppError("Failed to create. Please try again", 500));
+        await incrementUserURL(urlInfo.userID, next);
         return newURLData;
     }
     catch(err){
@@ -173,11 +179,11 @@ const createNewSuborgURL = async (urlInfo, next) => {
         if(!isValid){
             return next(new AppError("Original URL doesn't exist", 400));
         }
-        if(!urlInfo.originalURL.startsWith('https://') && !urlInfo.originalURL.startsWith('http://'))
-            urlInfo.originalURL = 'https://'+urlInfo.originalURL;
+        if(!urlInfo.originalURL.startsWith('https://') && !urlInfo.originalURL.startsWith('http://') && !urlInfo.originalURL.startsWith('ftp://'))
+            urlInfo.originalURL = 'https://' + urlInfo.originalURL;
 
         let shortURLEndPoint;
-        if(urlInfo.wishCustom){
+        if(urlInfo.wantCustom){
             shortURLEndPoint = urlInfo.suborg + '/' + urlInfo.customURL;
         }
         else{
@@ -189,12 +195,12 @@ const createNewSuborgURL = async (urlInfo, next) => {
         if(urlCount > 0)
             return next(new AppError("This custom URL already exists.", 400));
 
-
+        // console.log(urlInfo);
         let newURL = new URL(
             {
                 email: urlInfo.email,
                 name: urlInfo.name,
-                userID: urlInfo._id,
+                userID: urlInfo.userID,
                 suborg: urlInfo.suborg,
                 shortURLEndPoint: shortURLEndPoint,
                 originalURL: urlInfo.originalURL,
@@ -202,10 +208,13 @@ const createNewSuborgURL = async (urlInfo, next) => {
         let newURLData = await newURL.save();
         if(!newURLData)
             return next(new AppError("Failed to create. Please try again", 500));
+        await incrementUserURL(urlInfo.userID, next);
+        await incrementSuborgURL(urlInfo.suborg, next);
         return newURLData;
     }
     catch(err){
-        next(err);
+        console.log(err);
+        return next(err);
     }
 };
 

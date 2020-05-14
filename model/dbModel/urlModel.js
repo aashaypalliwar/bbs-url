@@ -30,6 +30,9 @@ const urlSchema = new mongoose.Schema({
         type: Number,
         default : 0
     },
+    lastHitAt: {
+        type: Date
+    },
     createdAt: {
         type: Date,
         default: Date.now()

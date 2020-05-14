@@ -44,6 +44,7 @@ const createNewUser = async (user, next) => {
         return newUserInfo;
     }
     catch(err){
+        console.log(err);
         next(err);
     }
 };
@@ -60,7 +61,7 @@ const updateUser = async (user, next) => {
         return updatedUserInfo;
     }
     catch(err){
-        next(err);
+       return next(err);
     }
 };
 
@@ -76,7 +77,8 @@ const incrementUserURL = async (id, next) => {
         return updatedUserInfo;
     }
     catch(err){
-        next(err);
+        console.log(err);
+       return next(err);
     }
 };
 
@@ -92,7 +94,7 @@ const decrementUserURL = async (id, next) => {
         return updatedUserInfo;
     }
     catch(err){
-        next(err);
+        return next(err);
     }
 };
 

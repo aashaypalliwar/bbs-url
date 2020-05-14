@@ -7,6 +7,7 @@ const config = require('../../utils/config');
 const sendEmail = require('../../utils/sendEmail');
 
 const signToken = id => {
+    console.log(config.JWT_EXPIRES_IN)
     return jwt.sign({ id }, config.JWT_SECRET, {
         expiresIn: config.JWT_EXPIRES_IN
     });
@@ -14,15 +15,15 @@ const signToken = id => {
 
 const createSendToken = (user, statusCode, res) => {
     const token = signToken(user._id);
-    const cookieOptions = {
-        expires: new Date(
-            Date.now() + config.JWT_COOKIE_EXPIRES_IN * 24 * 60 * 60 * 1000
-        ),
-        httpOnly: true
-    };
-    if (process.env.NODE_ENV === 'production') cookieOptions.secure = true;
-
-    res.cookie('jwt', token, cookieOptions);
+    // const cookieOptions = {
+    //     expires: new Date(
+    //         Date.now() + config.JWT_COOKIE_EXPIRES_IN * 24 * 60 * 60 * 1000
+    //     ),
+    //     httpOnly: true
+    // };
+    // if (process.env.NODE_ENV === 'production') cookieOptions.secure = true;
+    //
+    // res.cookie('jwt', token, cookieOptions);
 
     // Remove password from output
     user.password = undefined;
@@ -51,6 +52,7 @@ const protect = async (req, res, next) => {
         //         new AppError('You are not logged in! Please log in to get access.', 401)
         //     );
         //token = req.cookie.jwt;
+
 
         if (!token) {
             return next(
@@ -98,6 +100,15 @@ const restrictTo = (...roles) => {
         }
         next();
     };
+};
+
+const checkSuborg = (req, res, next) => {
+    if(req.user.suborg.includes(req.body.suborgName)){
+        next();
+    }
+    else{
+     return next( new AppError('You do not have permission to perform this action', 403));
+    }
 };
 
 const forgotPassword = async (req, res, next) => {
@@ -191,7 +202,8 @@ module.exports = {
     restrictTo,
     updatePassword,
     resetPassword,
-    forgotPassword
+    forgotPassword,
+    checkSuborg
 };
 
 
