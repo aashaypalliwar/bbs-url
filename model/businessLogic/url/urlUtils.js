@@ -1,11 +1,12 @@
 const dns = require('dns');
+let psl = require('psl');
 const { promisify } = require('util');
 const dnsLookup = promisify(dns.lookup);
 const urlRegex = require('url-regex');
 const generate = require('nanoid/generate');
 const URL = require('../../dbModel/urlModel');
 
-const preservedUrls = [
+const reservedUrls = [
     "login",
     "logout",
     "signup",
@@ -24,7 +25,33 @@ const preservedUrls = [
     "terms",
     "privacy",
     "report",
-    "pricing"
+    "pricing",
+    "aashay",
+    "shreeya",
+    "raja",
+    "fida",
+    "shivam",
+    "himanshu",
+    "palliwar",
+    "tangadpalliwar",
+    "neuro",
+    "webd",
+    "alma",
+    "wiss",
+    "esummit",
+    "esum",
+    "nakshatra",
+    "gymkhana",
+    "iitbbs",
+    "mhr",
+    "bhr",
+    "ghr",
+    "shr",
+    "ses",
+    "sif",
+    "sms",
+    "sbs",
+    "lbc"
 ];
 
 const alreadyExist = async (shortURLEndPoint) => {
@@ -39,6 +66,11 @@ const alreadyExist = async (shortURLEndPoint) => {
         showError(err);
     }
 }
+
+const isReserved = (shortURLEndPoint) => {
+    return reservedUrls.includes(shortURLEndPoint);
+}
+
 
 const validateSuborgUrlUpdate = async (shortURLEndPoint ) => {
     // Validate URL existence
@@ -65,14 +97,36 @@ const validateSuborgUrlUpdate = async (shortURLEndPoint ) => {
     return 1;
 };
 
+let extractHostname = (url) => {
+    let hostname;
+    //find & remove protocol (http, ftp, etc.) and get hostname
+
+    if (url.indexOf("//") > -1) {
+        hostname = url.split('/')[2];
+    }
+    else {
+        hostname = url.split('/')[0];
+    }
+
+    //find & remove port number
+    hostname = hostname.split(':')[0];
+    //find & remove "?"
+    hostname = hostname.split('?')[0];
+    return hostname;
+}
+
 const dnsCheck = async (url) => {
     try{
-        let URLData = await dnsLookup(url);
+        // const REPLACE_REGEX = /^https?:\/\//i
+        // const domain = url.replace(REPLACE_REGEX, '');
+        let domain = psl.get(extractHostname(url));
+        let URLData = await dnsLookup(domain);
         if(URLData.address)
             return 1;
     }
     catch (err) {
         // if(err.errno === 'ENOTFOUND');
+        console.log(err);
             return 0;
     }
 }
@@ -89,9 +143,10 @@ const generateEndpoint = async () =>{
 
 
 module.exports = {
-    preservedUrls,
+    reservedUrls,
     validateSuborgUrlUpdate,
     dnsCheck,
     generateEndpoint,
-    alreadyExist
+    alreadyExist,
+    isReserved
 }

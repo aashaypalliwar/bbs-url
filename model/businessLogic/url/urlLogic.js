@@ -1,8 +1,7 @@
 const URL = require('../../dbModel/urlModel');
 const AppError = require('../../../utils/appError');
 const validateSuborgUrlUpdate = require('./urlUtils').validateSuborgUrlUpdate;
-const dnsCheck = require('./urlUtils').dnsCheck;
-const generateEndpoint = require('./urlUtils').generateEndpoint;
+const { isReserved, alreadyExist, dnsCheck, generateEndpoint } = require('./urlUtils');
 
 // Get all the URLs
 const getAllURLs = async (next) => {
@@ -125,16 +124,27 @@ const updateSuborgURL = async (url, newEndpoint, next) => {
 //Create a new short URL
 const createNewShortURL = async (urlInfo, next) => {
     try{
-        //throw error
+        if(!urlInfo.originalURL.startsWith('https://') && !urlInfo.originalURL.startsWith('http://'))
+            urlInfo.originalURL = 'https://'+urlInfo.originalURL;
+
         let isValid = await dnsCheck(urlInfo.originalURL);
         if(!isValid){
             return next(new AppError("Original URL doesn't exist", 400));
         }
-        if(!urlInfo.originalURL.startsWith('https://') && !urlInfo.originalURL.startsWith('http://'))
-            urlInfo.originalURL = 'https://'+urlInfo.originalURL;
 
-
-         let shortURLEndPoint = await generateEndpoint();
+        let shortURLEndPoint = "";
+        if(urlInfo.wantCustomURL){
+            shortURLEndPoint = urlInfo.customURL
+            if(isReserved(shortURLEndPoint)){
+                return next(new AppError("The requested custom URL is reserved", 400));
+            }
+            let existsAlready = await alreadyExist(shortURLEndPoint);
+            if(existsAlready){
+                return next(new AppError("The requested custom URL already exists", 400));
+            }
+        }else{
+            shortURLEndPoint = await generateEndpoint();
+        }
 
         let newURL = new URL(
             {
@@ -143,7 +153,7 @@ const createNewShortURL = async (urlInfo, next) => {
                 userID: urlInfo._id,
                 suborg: urlInfo.suborg,
                 shortURLEndPoint: shortURLEndPoint,
-                originalURL: urlInfo.originalURL,
+                originalURL: urlInfo.originalURL
             });
         let newURLData = await newURL.save();
         if(!newURLData)

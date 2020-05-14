@@ -5,18 +5,26 @@ const { createNewShortURL, getURLsByUser, deleteURL } = require('../model/busine
 
 const userRouter = require('express').Router();
 
-userRouter.use(protect);
-
+//userRouter.use(protect);
+//change protect routine.
 //Create a new short URL
 userRouter.post('/url', async (req,res,next) => {
     try{
-        req.user.originalURL = req.body.originalURL;
-        let newURLData = await createNewShortURL(req.user, next);
+        let urlInfo = {
+            email: req.body.email,
+            name: req.body.name,
+            userID: req.body._id,
+            originalURL: req.body.originalURL,
+            wantCustomURL: req.body.wantCustomURL,
+            customURL: req.body.customURL
+        }
+
+        let newURLData = await createNewShortURL(urlInfo, next);
         if(newURLData) {
             res.status(200).json({
                 newURLData
             });
-            await incrementUserURL(req.user._id, next);
+            //await incrementUserURL(req.user._id, next);
         }
     }
     catch(err){
