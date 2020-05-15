@@ -19,7 +19,7 @@ const authRouter = require('express').Router();
 
 authRouter.post('/signup', async (req, res, next) => {
     try{
-        let newUser = await createNewUser(req.body);
+        let newUser = await createNewUser(req.body, next);
         await sendVerificationEmail(newUser, 201, res);
     }
     catch(err){

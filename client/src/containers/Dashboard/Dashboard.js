@@ -105,7 +105,6 @@ class Dashboard extends Component {
 
         return (
             <div>
-                <Header authenticated={this.state.authenticated} />
                 {!this.state.authenticated?this.guestDashboard():this.authDashboard(this.state.role)}
             </div>
         );

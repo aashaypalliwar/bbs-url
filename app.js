@@ -5,6 +5,7 @@ const cookieParser = require('cookie-parser');
 const mongoSanitize = require('express-mongo-sanitize');
 const xss = require('xss-clean');
 const hpp = require('hpp');
+const path = require('path');
 const rateLimit = require('express-rate-limit');
 
 const middleware = require('./utils/middleware');
@@ -65,8 +66,20 @@ app.use(xss());
 
 app.use(cookieParser());
 //change
-app.use(express.static("static"));
+// app.use(express.static("static"));
+
+
+// app.use(function(req, res, next) {
+//     res.setHeader('Access-Control-Allow-Origin', 'http://localhost:3000');
+//     res.setHeader('Access-Control-Allow-Credentials', 'true');
+//     next();
+// });
+
+
+
 app.use(middleware.requestLogger);
+
+app.use(express.static(path.join(__dirname, 'client/build')));
 
 // CRUD handler
 app.use('/api', apiRouter);
@@ -98,6 +111,10 @@ app.get('/:suborg/:code', async (req,res,next)=>{
     catch(err){
         next(err);
     }
+});
+
+app.get('*', (req, res) => {
+    res.sendFile(path.join(__dirname, '/client/build/index.html'));
 });
 
 app.use(middleware.unknownEndpoint);

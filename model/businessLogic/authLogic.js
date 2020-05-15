@@ -16,22 +16,26 @@ const signToken = id => {
 
 const createSendToken = (user, statusCode, res) => {
     const token = signToken(user._id);
-    // const cookieOptions = {
-    //     expires: new Date(
-    //         Date.now() + config.JWT_COOKIE_EXPIRES_IN * 24 * 60 * 60 * 1000
-    //     ),
-    //     httpOnly: true
-    // };
-    // if (process.env.NODE_ENV === 'production') cookieOptions.secure = true;
-    //
-    // res.cookie('jwt', token, cookieOptions);
+    const expirationTime = Date.now() + config.JWT_EXPIRES_IN;
+    // Date.now() + config.JWT_COOKIE_EXPIRES_IN * 24 * 60 * 60 * 1000
+
+    const cookieOptions = {
+        expires: new Date(
+            expirationTime
+        ),
+        httpOnly: true
+    };
+    if (process.env.NODE_ENV === 'production') cookieOptions.secure = true;
+
+    res.cookie('jwt', token, cookieOptions);
 
     // Remove password from output
     user.password = undefined;
 
     res.status(statusCode).json({
         status: 'success',
-        token,
+        // token,
+        expiresAfter: expirationTime,
         data: {
             user
         }
@@ -94,17 +98,17 @@ const protect = async (req, res, next) => {
     try{
         // 1) Getting token and check of it's there
         let token;
-        if (
-            req.headers.authorization &&
-            req.headers.authorization.startsWith('Bearer')
-        ) {
-            token = req.headers.authorization.split(' ')[1];
-        }
-        // if(!(req.cookie.jwt))
-        //     return next(
-        //         new AppError('You are not logged in! Please log in to get access.', 401)
-        //     );
-        //token = req.cookie.jwt;
+        // if (
+        //     req.headers.authorization &&
+        //     req.headers.authorization.startsWith('Bearer')
+        // ) {
+        //     token = req.headers.authorization.split(' ')[1];
+        // }
+        if(!(req.cookies.jwt))
+            return next(
+                new AppError('You are not logged in! Please log in to get access.', 401)
+            );
+        token = req.cookies.jwt;
 
 
         if (!token) {
@@ -237,21 +241,34 @@ const resetPassword = async (req, res, next) => {
 };
 
 const updatePassword = async (req, res, next) => {
-    // 1) Get user from collection
-    const user = await User.findById(req.user.id).select('+password');
+    try{
+        // 1) Get user from collection
+        const user = await User.findById(req.body._id).select('+password');
+        console.log(req.body._id);
+        console.log(user);
+        console.log(req.body.password)
+        console.log(req.body.passwordConfirm)
+        console.log(req.body.password)
+        console.log(user.password)
 
-    // 2) Check if POSTed current password is correct
-    if (!(await user.correctPassword(req.body.passwordCurrent, user.password))) {
-        return next(new AppError('Your current password is wrong.', 401));
+        // 2) Check if POSTed current password is correct
+        if (!(await user.correctPassword(req.body.password, user.password))) {
+            return next(new AppError('Your current password is wrong.', 401));
+        }
+
+        // 3) If so, update password
+        user.password = req.body.passwordNew;
+        user.passwordConfirm = req.body.passwordConfirm;
+        await user.save();
+
+        // 4) Log user in, send JWT
+        createSendToken(user, 200, res);
+    }
+    catch(err){
+        console.log(err);
+        return next(err);
     }
 
-    // 3) If so, update password
-    user.password = req.body.password;
-    user.passwordConfirm = req.body.passwordConfirm;
-    await user.save();
-
-    // 4) Log user in, send JWT
-    createSendToken(user, 200, res);
 };
 
 
