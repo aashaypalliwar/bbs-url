@@ -5,6 +5,7 @@ const User = require('../dbModel/userModel');
 const AppError = require('../../utils/appError');
 const config = require('../../utils/config');
 const sendEmail = require('../../utils/sendEmail');
+const generate = require('nanoid/generate');
 
 const signToken = id => {
     console.log(config.JWT_EXPIRES_IN)
@@ -35,6 +36,58 @@ const createSendToken = (user, statusCode, res) => {
             user
         }
     });
+};
+
+const sendVerificationEmail = async (user, statusCode, res) => {
+    try{
+        const code = await generate(
+            "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890",
+            Number(process.env.VERIFICATION_STRING_LENGTH) || 15
+        );
+        await User.updateOne(
+            { _id: user.id}, { $set: {
+                emailVerificationToken : code
+            }})
+        await sendEmail({
+            email : user.email,
+            subject: "Email verification - bbs.url",
+            message: "Greetings from team bbs.url!\nYou are just one step away from managing your URLs the bbs-way." +
+                "\nPlease verify your email address by entering the code in the verification prompt of our website." +
+                `\nCode : ${code}` +
+                "\n\nRegards," +
+                "\np_ash"
+        })
+
+        res.status(statusCode).json({
+            status: 'success',
+            message: 'Please verify your email'
+        });
+    }
+    catch(err) {
+        console.log(err);
+        return next(err);
+    }
+};
+
+const verifyEmail = async (user, code) => {
+    try{
+        if(user.emailVerificationToken === code){
+            await User.updateOne(
+                { _id: user.id}, { $set: {
+                        emailVerificationToken : undefined,
+                        emailVerified: true
+                }
+                });
+            return true;
+        }else{
+            return false;
+        }
+    }
+    catch(err) {
+        console.log(err);
+        // return next(err);
+        return false;
+    }
 };
 
 const protect = async (req, res, next) => {
@@ -143,37 +196,44 @@ const forgotPassword = async (req, res, next) => {
         await user.save({ validateBeforeSave: false });
 
         return next(
-            new AppError('There was an error sending the email. Try again later!'),
+            new AppError('There was an error sending the email. Please Try again later!'),
             500
         );
     }
 };
 
 const resetPassword = async (req, res, next) => {
-    // 1) Get user based on the token
-    const hashedToken = crypto
-        .createHash('sha256')
-        .update(req.params.token)
-        .digest('hex');
+    try{
+        // 1) Get user based on the token
+        const hashedToken = crypto
+            .createHash('sha256')
+            .update(req.body.resetToken)
+            .digest('hex');
 
-    const user = await User.findOne({
-        passwordResetToken: hashedToken,
-        passwordResetExpires: { $gt: Date.now() }
-    });
+        const user = await User.findOne({
+            passwordResetToken: hashedToken,
+            passwordResetExpires: { $gt: Date.now() }
+        });
 
-    // 2) If token has not expired, and there is user, set the new password
-    if (!user) {
-        return next(new AppError('Token is invalid or has expired', 400));
+        // 2) If token has not expired, and there is user, set the new password
+        if (!user) {
+            return next(new AppError('Token is invalid or has expired', 400));
+        }
+        user.password = req.body.password;
+        user.passwordConfirm = req.body.passwordConfirm;
+        user.passwordResetToken = undefined;
+        user.passwordResetExpires = undefined;
+        await user.save();
+
+        // 3) Update changedPasswordAt property for the user
+        // 4) Log the user in, send JWT
+        createSendToken(user, 200, res);
     }
-    user.password = req.body.password;
-    user.passwordConfirm = req.body.passwordConfirm;
-    user.passwordResetToken = undefined;
-    user.passwordResetExpires = undefined;
-    await user.save();
+    catch(err){
+        console.log(err);
+        return new AppError("Something went wrong while resetting password", 500);
+    }
 
-    // 3) Update changedPasswordAt property for the user
-    // 4) Log the user in, send JWT
-    createSendToken(user, 200, res);
 };
 
 const updatePassword = async (req, res, next) => {
@@ -203,7 +263,9 @@ module.exports = {
     updatePassword,
     resetPassword,
     forgotPassword,
-    checkSuborg
+    checkSuborg,
+    sendVerificationEmail,
+    verifyEmail
 };
 
 

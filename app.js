@@ -15,6 +15,15 @@ const { generateEndpoint, alreadyExist, dnsCheck } = require('./model/businessLo
 const { incrementURLHits } = require('./model/businessLogic/url/urlLogic');
 const AppError = require('./utils/appError');
 
+
+// const sendEmail = require('./utils/sendEmail');
+// sendEmail({
+//     email: "avp10@itbbs.ac.in",
+//     subject: "Our first email",
+//     message: "Greetings from Neuromancers!"
+// })
+
+
 const app = express();
 
 app.use(helmet());
@@ -26,8 +35,8 @@ if(config.NODE_ENV === 'development')
     limit = 1000;
 const limiter = rateLimit({
     max: limit,
-    windowMs: 60 * 60 * 1000,
-    message: 'Too many requests from this IP, please try again in an hour!'
+    windowMs: 3 * 60 * 60 * 1000,
+    message: 'Too many requests from this IP, please try again after 3 hours!'
 });
 app.use('/', limiter);
 

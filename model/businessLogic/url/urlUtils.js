@@ -5,6 +5,7 @@ const dnsLookup = promisify(dns.lookup);
 const urlRegex = require('url-regex');
 const generate = require('nanoid/generate');
 const URL = require('../../dbModel/urlModel');
+const config = require('../../../utils/config')
 
 const reservedUrls = [
     "login",
@@ -134,7 +135,7 @@ const dnsCheck = async (url) => {
 const generateEndpoint = async () =>{
     const endpoint = await generate(
         "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890",
-        Number(process.env.LINK_LENGTH) || 6
+        Number(config.LINK_LENGTH) || 6
     );
     let existsAlready = await alreadyExist(endpoint)
     if (!existsAlready) return endpoint;
