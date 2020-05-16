@@ -1,4 +1,5 @@
 const URL = require('../../dbModel/urlModel');
+const User = require('../../dbModel/userModel');
 const AppError = require('../../../utils/appError');
 const validateSuborgUrlUpdate = require('./urlUtils').validateSuborgUrlUpdate;
 const { isReserved, alreadyExist, dnsCheck, generateEndpoint } = require('./urlUtils');
@@ -84,7 +85,8 @@ const getRedirectURL = async (endpoint, next) => {
     try {
         let urlData = await URL.findOne({shortURLEndPoint: endpoint, blacklisted : false}).lean();
         if(!urlData)
-            return next(new AppError("The short URL does not redirect to a valid location.", 404));
+            // return next(new AppError("The short URL does not redirect to a valid location.", 404));
+            return undefined;
         return urlData.originalURL;
     }
     catch(err){
@@ -130,6 +132,10 @@ const updateSuborgURL = async (url, newEndpoint, next) => {
 //Create a new short URL
 const createNewShortURL = async (urlInfo, next) => {
     try{
+        let urlCreator = await User.findById(urlInfo.userID);
+        if(urlCreator.blacklisted){
+            return new AppError("You are forbidden to perform this action by admin.", 403)
+        }
         if(!urlInfo.originalURL.startsWith('https://') && !urlInfo.originalURL.startsWith('http://') && !urlInfo.originalURL.startsWith('ftp://'))
             urlInfo.originalURL = 'https://'+urlInfo.originalURL;
 
@@ -175,6 +181,10 @@ const createNewShortURL = async (urlInfo, next) => {
 const createNewSuborgURL = async (urlInfo, next) => {
     try{
         //throw error
+        let urlCreator = await User.findById(urlInfo.userID);
+        if(urlCreator.blacklisted){
+            return new AppError("You are forbidden to perform this action by admin.", 403)
+        }
         let isValid = await dnsCheck(urlInfo.originalURL);
         if(!isValid){
             return next(new AppError("Original URL doesn't exist", 400));

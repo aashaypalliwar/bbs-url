@@ -10,12 +10,17 @@ let passwordConfirm = React.createRef();
 let name = React.createRef();
 
 const SignUp = (props) =>{
+
     const [ errorStatus, setError ] = useState({
         isError: false,
         errorMessage: ""
     })
     const [ isLoading, setLoading ] = useState(false);
     let history = useHistory();
+
+    if(props.isAuth){
+        history.replace('/');
+    }
 
     let submitHandler = (event)=>{
         event.preventDefault();

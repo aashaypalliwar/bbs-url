@@ -93,7 +93,7 @@ class Wrapper extends Component {
                 </header>
                 <Route path='/' exact render={ () => (!this.state.authenticated) ? <Guest/>:<Dashboard/>}/>
                 <Route path='/login' exact render={ () => <Login isAuth={this.state.authenticated} auth={this.authHandler}/>} />
-                <Route path='/signup' exact render={ () => <SignUp/>} />
+                <Route path='/signup' exact render={ () => <SignUp isAuth={this.state.authenticated}/>} />
                 <Route path='/forgotPassword' exact render={ () => <ForgotPassword auth={this.authHandler}/>} />
                 <Route path='/changePassword' exact render={ () => <ChangePassword currentState={this.state} auth={this.authHandler}/>} />
                 <Route path='/verifyEmail' exact render={ () => <Token auth={this.authHandler}/>} />

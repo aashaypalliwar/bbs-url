@@ -12,18 +12,9 @@ const middleware = require('./utils/middleware');
 const { getRedirectURL } = require('./model/businessLogic/url/urlLogic');
 const config = require('./utils/config');
 const apiRouter = require('./controller/apiController');
-const { generateEndpoint, alreadyExist, dnsCheck } = require('./model/businessLogic/url/urlUtils');
+const { clientEndpoints } = require('./model/businessLogic/url/urlUtils');
 const { incrementURLHits } = require('./model/businessLogic/url/urlLogic');
 const AppError = require('./utils/appError');
-
-
-// const sendEmail = require('./utils/sendEmail');
-// sendEmail({
-//     email: "avp10@itbbs.ac.in",
-//     subject: "Our first email",
-//     message: "Greetings from Neuromancers!"
-// })
-
 
 const app = express();
 
@@ -49,37 +40,20 @@ app.use(mongoSanitize());
 
 // Data sanitization against XSS
 app.use(xss());
-
-// Prevent parameter pollution
-// app.use(
-//     hpp({
-//         whitelist: [
-//             'duration',
-//             'ratingsQuantity',
-//             'ratingsAverage',
-//             'maxGroupSize',
-//             'difficulty',
-//             'price'
-//         ]
-//     })
-// );
-
 app.use(cookieParser());
-//change
-// app.use(express.static("static"));
-
-
-// app.use(function(req, res, next) {
-//     res.setHeader('Access-Control-Allow-Origin', 'http://localhost:3000');
-//     res.setHeader('Access-Control-Allow-Credentials', 'true');
-//     next();
-// });
-
-
 
 app.use(middleware.requestLogger);
 
 app.use(express.static(path.join(__dirname, 'client/build')));
+
+app.get('/:clientEndpoint', (req, res) => {
+    if(clientEndpoints.includes(req.params.clientEndpoint)){
+        res.sendFile(path.join(__dirname, '/client/build/index.html'));
+    }else{
+        next();
+    }
+
+})
 
 // CRUD handler
 app.use('/api', apiRouter);
@@ -89,6 +63,9 @@ app.get('/:code', async (req,res,next)=>{
     try {
         let originalURL = await getRedirectURL(req.params.code, next);
         console.log(originalURL);
+        if(originalURL === undefined){
+            res.sendFile(path.join(__dirname, '/client/build/index.html'));
+        }
         if (originalURL) {
             res.status(301).redirect(originalURL);
             await incrementURLHits(req.params.code, next);
@@ -103,6 +80,9 @@ app.get('/:code', async (req,res,next)=>{
 app.get('/:suborg/:code', async (req,res,next)=>{
     try{
         let originalURL = await getRedirectURL(req.params.suborg+'/'+req.params.code, next);
+        if(originalURL === undefined){
+            res.sendFile(path.join(__dirname, '/client/build/index.html'));
+        }
         if(originalURL) {
             res.status(301).redirect(originalURL);
             await incrementURLHits(req.params.suborg+'/'+req.params.code, next);

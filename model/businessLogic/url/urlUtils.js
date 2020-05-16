@@ -11,10 +11,6 @@ const reservedUrls = [
     "login",
     "logout",
     "signup",
-    "reset-password",
-    "resetpassword",
-    "url-password",
-    "url-info",
     "settings",
     "stats",
     "verify",
@@ -27,32 +23,20 @@ const reservedUrls = [
     "privacy",
     "report",
     "pricing",
-    "aashay",
-    "shreeya",
-    "raja",
-    "fida",
-    "shivam",
-    "himanshu",
-    "palliwar",
-    "tangadpalliwar",
-    "neuro",
-    "webd",
-    "alma",
-    "wiss",
-    "esummit",
-    "esum",
-    "nakshatra",
-    "gymkhana",
-    "iitbbs",
-    "mhr",
-    "bhr",
-    "ghr",
-    "shr",
-    "ses",
-    "sif",
-    "sms",
-    "sbs",
-    "lbc"
+    "login",
+    "signup",
+    "forgotPassword",
+    "changePassword",
+    "verifyEmail"
+];
+
+const clientEndpoints = [
+    "login",
+    "signup",
+    "forgotPassword",
+    "changePassword",
+    "verifyEmail",
+    "dashboard"
 ];
 
 const alreadyExist = async (shortURLEndPoint) => {
@@ -149,5 +133,6 @@ module.exports = {
     dnsCheck,
     generateEndpoint,
     alreadyExist,
-    isReserved
+    isReserved,
+    clientEndpoints
 }
