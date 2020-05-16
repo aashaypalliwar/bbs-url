@@ -46,7 +46,7 @@ app.use(middleware.requestLogger);
 
 app.use(express.static(path.join(__dirname, 'client/build')));
 
-app.get('/:clientEndpoint', (req, res) => {
+app.get('/:clientEndpoint', (req, res, next) => {
     if(clientEndpoints.includes(req.params.clientEndpoint)){
         res.sendFile(path.join(__dirname, '/client/build/index.html'));
     }else{
@@ -64,7 +64,7 @@ app.get('/:code', async (req,res,next)=>{
         let originalURL = await getRedirectURL(req.params.code, next);
         console.log(originalURL);
         if(originalURL === undefined){
-            res.sendFile(path.join(__dirname, '/client/build/index.html'));
+            res.status(301).redirect('/');
         }
         if (originalURL) {
             res.status(301).redirect(originalURL);
@@ -81,7 +81,7 @@ app.get('/:suborg/:code', async (req,res,next)=>{
     try{
         let originalURL = await getRedirectURL(req.params.suborg+'/'+req.params.code, next);
         if(originalURL === undefined){
-            res.sendFile(path.join(__dirname, '/client/build/index.html'));
+            res.status(301).redirect('/');
         }
         if(originalURL) {
             res.status(301).redirect(originalURL);
@@ -94,7 +94,7 @@ app.get('/:suborg/:code', async (req,res,next)=>{
 });
 
 app.get('*', (req, res) => {
-    res.sendFile(path.join(__dirname, '/client/build/index.html'));
+    res.status(301).redirect('/');
 });
 
 app.use(middleware.unknownEndpoint);
