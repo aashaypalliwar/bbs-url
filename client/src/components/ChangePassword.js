@@ -1,7 +1,8 @@
-import React from 'react';
+import React, { useState } from "react";
 import { useHistory, Link } from 'react-router-dom';
 import { Form, Button, Container, Row, Col } from 'react-bootstrap';
 import axios from 'axios'
+import ErrorAlert from "./ErrorAlert";
 
 
 let password = React.createRef();
@@ -9,12 +10,18 @@ let passwordConfirm = React.createRef();
 let passwordNew = React.createRef();
 
 const ChangePassword = (props) =>{
+    const [ errorStatus, setError ] = useState({
+        isError: false,
+        errorMessage: ""
+    })
+    const [ isLoading, setLoading ] = useState(false);
     let history = useHistory();
     if(!props.currentState.authenticated){
         history.replace('/')
     }
     let submitHandler = (event) => {
         event.preventDefault();
+        setLoading(true);
         axios.post('/api/auth/updatePassword', {
             _id: props.currentState._id,
             password: password.current.value,
@@ -38,6 +45,11 @@ const ChangePassword = (props) =>{
             if (error.response) {
                 console.log(error.response.data.message);
                 console.log(error.response.status);
+                setError({
+                    isError: true,
+                    errorMessage: error.response.data.message
+                })
+                setLoading(false);
             }
         })
     }
@@ -65,10 +77,20 @@ const ChangePassword = (props) =>{
                             <Form.Label>Confirm Password</Form.Label>
                             <Form.Control type="password" placeholder="Confirm Password" ref={passwordConfirm}/>
                         </Form.Group>
-                        <Button variant="success" style={{backgroundColor: "#093009"}} type="submit">
-                            Submit
+                        <Button variant="success" style={{backgroundColor: "#093009"}} type="submit" disabled={isLoading}>
+                            {isLoading ? 'Submitting…' : 'Submit'}
                         </Button>
                     </Form>
+                </Col>
+            </Row>
+            <Row>
+                <Col md={ {span: 6, offset: 3}} lg={ {span: 4, offset: 4}} sm={ {span: 10, offset:1}} xs={{span:10, offset:1}} style={{paddingLeft: "1.5rem", paddingRight: "1.5rem", paddingTop: "1.5rem", paddingBottom: "2rem", marginTop:"1rem"}}>
+                    { errorStatus.isError ? <ErrorAlert dismiss={() => {
+                        setError({
+                            isError: false,
+                            errorMessage: ""
+                        })
+                    }} message={errorStatus.errorMessage}/> : null }
                 </Col>
             </Row>
         </Container>

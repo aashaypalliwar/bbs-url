@@ -1,7 +1,8 @@
-import React from 'react';
+import React, { useState } from "react";
 import { Form, Button, Container, Row, Col } from 'react-bootstrap';
 import axios from 'axios';
 import { useHistory } from 'react-router-dom';
+import ErrorAlert from "./ErrorAlert";
 
 let email = React.createRef();
 let password = React.createRef();
@@ -9,10 +10,16 @@ let passwordConfirm = React.createRef();
 let name = React.createRef();
 
 const SignUp = (props) =>{
+    const [ errorStatus, setError ] = useState({
+        isError: false,
+        errorMessage: ""
+    })
+    const [ isLoading, setLoading ] = useState(false);
     let history = useHistory();
 
     let submitHandler = (event)=>{
         event.preventDefault();
+        setLoading(true);
         let payload = {
             email: email.current.value,
             password: password.current.value,
@@ -20,7 +27,7 @@ const SignUp = (props) =>{
             name: name.current.value
         }
         console.log(payload);
-        axios.post('http://localhost:8080/api/auth/signup', payload).then((response)=>{
+        axios.post('/api/auth/signup', payload).then((response)=>{
             console.log(response);
             if(response.status === 201 && response.statusText === 'Created'){
                 history.push( {
@@ -32,6 +39,11 @@ const SignUp = (props) =>{
             if (error.response) {
                 console.log(error.response.data.message);
                 console.log(error.response.status);
+                setError({
+                    isError: true,
+                    errorMessage: error.response.data.message
+                })
+                setLoading(false);
             }
         })
     }
@@ -67,10 +79,20 @@ const SignUp = (props) =>{
                             <Form.Label>Confirm Password</Form.Label>
                             <Form.Control type="password" placeholder="Confirm Password" ref={passwordConfirm} />
                         </Form.Group>
-                        <Button variant="success" style={{backgroundColor: "#093009"}} type="submit">
-                            Sign Up
+                        <Button variant="success" style={{backgroundColor: "#093009"}} type="submit" disabled={isLoading}>
+                            {isLoading ? 'Submitting…' : 'Sign Up'}
                         </Button>
                     </Form>
+                </Col>
+            </Row>
+            <Row>
+                <Col md={ {span: 6, offset: 3}} lg={ {span: 4, offset: 4}} sm={ {span: 10, offset:1}} xs={{span:10, offset:1}} style={{paddingLeft: "1.5rem", paddingRight: "1.5rem", paddingTop: "1.5rem", paddingBottom: "2rem", marginTop:"1rem"}}>
+                    { errorStatus.isError ? <ErrorAlert dismiss={() => {
+                        setError({
+                            isError: false,
+                            errorMessage: ""
+                        })
+                    }} message={errorStatus.errorMessage}/> : null }
                 </Col>
             </Row>
         </Container>

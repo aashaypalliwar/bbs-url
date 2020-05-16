@@ -1,10 +1,16 @@
-import React from 'react';
+import React, { useState } from "react";
 import { Form, Button, Container, Row, Col } from 'react-bootstrap';
 import { useHistory, Link } from 'react-router-dom';
 import axios from 'axios';
 import { withRouter } from "react-router";
+import ErrorAlert from "./ErrorAlert";
 
 const Token = (props) =>{
+    const [ errorStatus, setError ] = useState({
+        isError: false,
+        errorMessage: ""
+    })
+    const [ isLoading, setLoading ] = useState(false);
     let history = useHistory();
     let token = React.createRef();
     if(props.location === undefined){
@@ -14,6 +20,7 @@ const Token = (props) =>{
 
     let submitHandler = (event) => {
         event.preventDefault();
+        setLoading(true);
         let payload = {
             email: props.location.state.email,
             verificationToken: token.current.value
@@ -36,6 +43,11 @@ const Token = (props) =>{
             if (error.response) {
                 console.log(error.response.data.message);
                 console.log(error.response.status);
+                setError({
+                    isError: true,
+                    errorMessage: error.response.data.message
+                })
+                setLoading(false);
             }
         })
     }
@@ -72,13 +84,23 @@ const Token = (props) =>{
                             <Form.Control placeholder="Enter Token" ref={token} />
                         </Form.Group>
 
-                        <Button variant="success" style={{backgroundColor: "#093009"}} type="submit">
-                            Submit
+                        <Button variant="success" style={{backgroundColor: "#093009"}} type="submit" disabled={isLoading}>
+                            {isLoading ? 'Sending…' : 'Submit'}
                         </Button>
                         <a style={{color: "#093009", fontSize: "0.9rem", margin: "1rem", cursor: "pointer"}} >
                             <span onClick={resendTokenHandler}>Resend Token</span>
                         </a>
                     </Form>
+                </Col>
+            </Row>
+            <Row>
+                <Col md={ {span: 6, offset: 3}} lg={ {span: 4, offset: 4}} sm={ {span: 10, offset:1}} xs={{span:10, offset:1}} style={{paddingLeft: "1.5rem", paddingRight: "1.5rem", paddingTop: "1.5rem", paddingBottom: "2rem", marginTop:"1rem"}}>
+                    { errorStatus.isError ? <ErrorAlert dismiss={() => {
+                        setError({
+                            isError: false,
+                            errorMessage: ""
+                        })
+                    }} message={errorStatus.errorMessage}/> : null }
                 </Col>
             </Row>
         </Container>

@@ -1,11 +1,17 @@
 import React, { Component } from 'react';
 import { Form, Button, Container, Row, Col } from 'react-bootstrap';
 import axios from 'axios'
+import ErrorAlert from "./ErrorAlert";
+import isLatLong from "validator/es/lib/isLatLong";
 
 class ForgotPassword extends Component {
     state = {
         emailSent: false,
-        email: ""
+        email: "",
+        isError: false,
+        errorMessage: "",
+        isLoading: false,
+        isTokenBeingSent: false
     }
     email = React.createRef();
     token = React.createRef();
@@ -13,6 +19,7 @@ class ForgotPassword extends Component {
     passwordConfirm = React.createRef();
     submitHandler = (event) => {
         event.preventDefault();
+        this.setState({isLoading: true});
         axios.post('/api/auth/forgotPassword',{email: this.email.current.value})
             .then((response) => {
                 if(response.status === 200 && response.data.message === 'Token sent to email!'){
@@ -25,12 +32,18 @@ class ForgotPassword extends Component {
                     console.log(error.response.data.message);
                     console.log(error.response.status);
                     this.email.current.value = "";
+                    this.setState({
+                        isError: true,
+                        errorMessage: error.response.data.message,
+                        isLoading: false
+                    })
                 }
             });
 
     }
     submitTokenHandler = (event) => {
         event.preventDefault();
+        this.setState({isTokenBeingSent: true});
         axios.post('/api/auth/resetPassword',{
             resetToken: this.token.current.value,
             password: this.password.current.value,
@@ -55,7 +68,12 @@ class ForgotPassword extends Component {
                     console.log(error.response.data.message);
                     console.log(error.response.status);
                     if(error.response.status === 400 && error.response.data.message === 'Token is invalid or has expired'){
-                            this.setState({emailSent : false});
+                        this.setState({
+                            isError: true,
+                            errorMessage: error.response.data.message,
+                            emailSent : false,
+                            isTokenBeingSent: false
+                        })
                     }
                 }
             });
@@ -75,11 +93,21 @@ class ForgotPassword extends Component {
                         <Form.Label>Email Address</Form.Label>
                         <Form.Control type="email" placeholder="Enter your email" ref={this.email}/>
                     </Form.Group>
-                    <Button variant="success" style={{backgroundColor: "#093009"}} type="submit">
-                        Send Code
+                    <Button variant="success" style={{backgroundColor: "#093009"}} type="submit" disabled={this.state.isLoading}>
+                        {this.state.isLoading ? "Sending Code.." : "Send Code"}
                     </Button>
                 </Form>
             </Col>
+            <Row>
+                <Col md={ {span: 6, offset: 3}} lg={ {span: 4, offset: 4}} sm={ {span: 10, offset:1}} xs={{span:10, offset:1}} style={{paddingLeft: "1.5rem", paddingRight: "1.5rem", paddingTop: "1.5rem", paddingBottom: "2rem", marginTop:"1rem"}}>
+                    { this.state.isError ? <ErrorAlert dismiss={() => {
+                        this.setState({
+                            isError: false,
+                            errorMessage: ""
+                        })
+                    }} message={this.state.errorMessage}/> : null }
+                </Col>
+            </Row>
         </Row>
     </Container>)
 
@@ -108,10 +136,20 @@ class ForgotPassword extends Component {
                         <Form.Label>Confirm Password</Form.Label>
                         <Form.Control type="password" placeholder="Confirm Password" ref={this.passwordConfirm} />
                     </Form.Group>
-                    <Button variant="success" style={{backgroundColor: "#093009"}} type="submit">
-                        Change Password
+                    <Button variant="success" style={{backgroundColor: "#093009"}} type="submit" disabled={this.state.isTokenBeingSent}>
+                        {this.state.isTokenBeingSent ? "Changing Password..":"Change Password"}
                     </Button>
                 </Form>
+            </Col>
+        </Row>
+        <Row>
+            <Col md={ {span: 6, offset: 3}} lg={ {span: 4, offset: 4}} sm={ {span: 10, offset:1}} xs={{span:10, offset:1}} style={{paddingLeft: "1.5rem", paddingRight: "1.5rem", paddingTop: "1.5rem", paddingBottom: "2rem", marginTop:"1rem"}}>
+                { this.state.isError ? <ErrorAlert dismiss={() => {
+                    this.setState({
+                        isError: false,
+                        errorMessage: ""
+                    })
+                }} message={this.state.errorMessage}/> : null }
             </Col>
         </Row>
     </Container>)
