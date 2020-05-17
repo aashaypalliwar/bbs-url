@@ -39,9 +39,12 @@ const Login = (props) =>{
                     name: response.data.data.user.name,
                     email: response.data.data.user.email,
                     suborg: response.data.data.user.suborg,
+                    categories: response.data.data.user.suborgInfo,
                     numberOfURLs: response.data.data.user.numberOfURLs,
-                    expiresAfter: response.data.expiresAfter
+                    expiresAfter: response.data.expiresAfter,
+                    role: response.data.expiresAfter
                 }
+                console.log(user);
                 props.auth(user);
             }
         }).catch((error)=>{
@@ -49,12 +52,18 @@ const Login = (props) =>{
             if (error.response) {
                 console.log(error.response.data.message);
                 console.log(error.response.status);
-                setLoading(false);
                 setError({
                     isError: true,
                     errorMessage: error.response.data.message
                 })
             }
+            else{
+                setError({
+                    isError: true,
+                    errorMessage: "Something went wrong!"
+                })
+            }
+            setLoading(false);
         })
     }
 

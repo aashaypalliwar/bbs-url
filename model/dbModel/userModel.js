@@ -3,6 +3,11 @@ const mongoose = require('mongoose');
 const validator = require('validator');
 const bcrypt = require('bcryptjs');
 
+const suborgData = new mongoose.Schema({
+    name: String,
+    description: String
+});
+
 const userSchema = new mongoose.Schema({
     email: {
         type: String,
@@ -17,11 +22,14 @@ const userSchema = new mongoose.Schema({
     },
     role: {
         type: String,
-        enum: ['guest', 'user', 'suborg', 'admin'],
         default: 'user'
     },
     suborg: {
         type: [String]
+    },
+    suborgInfo: {
+        type: [suborgData],
+        default: []
     },
     password: {
         type: String,

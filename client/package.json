@@ -10,6 +10,7 @@
     "bootstrap": "^4.4.1",
     "local-storage": "^2.0.0",
     "npx": "^10.2.2",
+    "ramda": "^0.27.0",
     "react": "^16.12.0",
     "react-bootstrap": "^1.0.0-beta.16",
     "react-cookie": "^4.0.3",

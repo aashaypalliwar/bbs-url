@@ -1,4 +1,4 @@
-const { incrementUserURL, decrementUserURL } = require('../model/businessLogic/userLogic');
+const { incrementUserURL, decrementUserURL, getAllSuborgInfo } = require('../model/businessLogic/userLogic');
 const { protect } = require('../model/businessLogic/authLogic');
 const { createNewShortURL, getURLsByUser, deleteURL } = require('../model/businessLogic/url/urlLogic');
 // const sendEmail = require('./../utils/email');
@@ -38,6 +38,21 @@ userRouter.get('/url', async (req,res,next) => {
         if(URLData) {
             res.status(200).json({
                 URLData
+            });
+        }
+    }
+    catch(err){
+        next(err);
+    }
+});
+
+// Get all suborg info of a user
+userRouter.get('/suborg', async (req,res,next) => {
+    try{
+        let suborgInfo = await getAllSuborgInfo(req.user.email, next);
+        if(suborgInfo) {
+            res.status(200).json({
+                categories: suborgInfo
             });
         }
     }

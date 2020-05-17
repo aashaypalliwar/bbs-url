@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { BrowserRouter, Route } from 'react-router-dom';
+import { Route, Redirect } from 'react-router-dom';
 import { withRouter } from "react-router";
 import ls from 'local-storage';
 import Header from "../../components/Header/Header";
@@ -13,54 +13,37 @@ import { withCookies } from 'react-cookie';
 
 import axios from 'axios';
 import ChangePassword from "../../components/ChangePassword";
-import ForgotPassword from "../../components/ForgotPassword";
 import ResetPasswordToken from "../../components/ResetPasswordToken";
-import ForgotPassword2 from "../../components/ForgotPassword2";
+import ForgotPassword from "../../components/ForgotPassword";
+import LandingPage from "../LandingPage/LandingPage";
 
 class Wrapper extends Component {
-
-    state = {
-        authenticated: false,
-        _id: null,
-        email: null,
-        name: null,
-        role: 'user',
-        suborg: null,
-        numberOfURLs: null,
-        // URLinfo: [{originalURL : 'aashay.com', shortURLEndPoint: '8as56d', hits: 10, createdAt: 'Sunday' },{originalURL : 'aashdsfay.com', hits: 5, shortURLEndPoint: '8a889d', createdAt: 'Sunda78645y' }]
-        URLInfo : null
-    }
-
     constructor(props) {
         super(props);
-        let isAuth = false;
+        let authenticated = false;
         if(ls('user') !== null){
             let user = JSON.parse(ls.get('user'));
             if(Date.now() < user.expiresAfter)
-                isAuth = true;
+                authenticated = true;
         }
 
-        if(isAuth){
+        if(authenticated){
             let user = JSON.parse(ls.get('user'));
+            user.authenticated = true;
             this.state = {
-                authenticated: true,
-                _id: user._id,
-                name: user.name,
-                email: user.email,
-                suborg: user.suborg,
-                numberOfURLs: user.numberOfURLs,
-                URLInfo : null
+                ...user
             };
         }else{
+            ls.clear();
             this.state = {
                 authenticated: false,
                 _id: null,
                 email: null,
                 name: null,
-                role: 'user',
-                suborg: null,
+                role: null,
+                suborg: [],
+                categories: [],
                 numberOfURLs: null,
-                URLInfo : null
             }
         }
     }
@@ -68,22 +51,54 @@ class Wrapper extends Component {
     //componentDid mount
     //if authed get the url data and update state.
     //if not authed do nothing.
+
+    componentDidMount() {
+        let shouldUpdate = false;
+        let updatedCategories;
+        if(this.state.authenticated){
+            axios.get('/api/user/suborg', { withCredentials: true})
+                .then((response) => {
+                    if(response.status === 200 && response.statusText === 'OK'){
+                        if(response.data.categories.length !== this.state.categories.length){
+                            shouldUpdate = true;
+                            updatedCategories = [...response.data.categories];
+                        }
+                    }
+                })
+                .then(()=>{
+                    if(shouldUpdate){
+                        this.setState({categories: updatedCategories});
+                        console.log("had to sync category info");
+                    }
+                })
+                .catch((error) => {
+                    console.log(error);
+                })
+        }
+    }
+
+    componentDidUpdate(prevProps, prevState, snapshot) {
+        ls.clear();
+        ls.set('user', JSON.stringify(this.state));
+        console.log("ls synced");
+    }
+
     authHandler = (user) => {
             ls.clear();
+            user.authenticated = true
             ls.set('user', JSON.stringify(user));
             this.setState({
-                authenticated: true,
-                _id: user._id,
-                name: user.name,
-                email: user.email,
-                suborg: user.suborg,
-                numberOfURLs: user.numberOfURLs
+                ...user
             });
             this.props.history.replace('/');
     }
 
     toggleAuth = () => {
-        this.setState({authenticated: !this.state.authenticated});
+        this.indirectStateSetter({authenticated: !this.state.authenticated});
+    }
+
+    indirectStateSetter = (newState) => {
+        this.setState(newState);
     }
 
     render () {
@@ -93,10 +108,12 @@ class Wrapper extends Component {
                 <header>
                     <Header authenticated={this.state.authenticated} toggle={this.toggleAuth} />
                 </header>
-                <Route path='/' exact render={ () => (!this.state.authenticated) ? <Guest/>:<Dashboard/>}/>
+                <Route path='/' exact render={ () => (!this.state.authenticated) ? <Guest/>:<Redirect to='/dashboard'/>}/>
+                {/*<Route path='/dashboard' render={ () => (!this.state.authenticated) ? <Redirect to='/'/>:<Dashboard appState={this.state} set={this.indirectStateSetter}/>}/>*/}
+                <Route path='/dashboard' render={ () => (!this.state.authenticated) ? <Redirect to='/'/>:<LandingPage appState={this.state} set={this.indirectStateSetter}/>}/>
                 <Route path='/login' exact render={ () => <Login isAuth={this.state.authenticated} auth={this.authHandler}/>} />
                 <Route path='/signup' exact render={ () => <SignUp isAuth={this.state.authenticated}/>} />
-                <Route path='/forgotPassword' exact render={ () => <ForgotPassword2 auth={this.authHandler}/>} />
+                <Route path='/forgotPassword' exact render={ () => <ForgotPassword auth={this.authHandler}/>} />
                 <Route path='/changePassword' exact render={ () => <ChangePassword currentState={this.state} auth={this.authHandler}/>} />
                 <Route path='/verifyEmail' exact render={ () => <Token auth={this.authHandler}/>} />
                 <Route path='/resetPassword' exact render={ () => <ResetPasswordToken auth={this.authHandler}/>} />

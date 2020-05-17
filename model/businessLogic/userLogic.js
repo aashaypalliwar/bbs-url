@@ -150,7 +150,19 @@ const whitelistUser = async (id, next) => {
     }
 }
 
-//update password
+//get all suborgs of a user
+const getAllSuborgInfo = async (email, next) => {
+    try {
+        let user = await User.find({email: email}).lean();
+        if(!user)
+            return next(new AppError("User not found.", 404));
+        return user.suborgInfo;
+    }
+    catch(err){
+        next(err);
+    }
+};
+
 
 module.exports = {
     getAllUsers,
@@ -161,6 +173,6 @@ module.exports = {
     decrementUserURL,
     deleteUser,
     whitelistUser,
-    blacklistUser
-
+    blacklistUser,
+    getAllSuborgInfo
 };

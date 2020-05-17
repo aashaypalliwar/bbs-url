@@ -77,10 +77,12 @@ const createNewSuborg = async (suborg, next) => {
             // console.log(user.suborg);
             // console.log(typeof user.suborg);
             let suborgs = [...user.suborg, suborg.name];
+            let detailSuborgInfo = [...user.suborgInfo, { name: suborg.name, description: suborg.description }]
             console.log(suborgs);
             let updatedUser = await User.updateOne({_id: suborg.userID}, {
                 $set: {
-                    suborg: suborgs
+                    suborg: suborgs,
+                    suborgInfo: detailSuborgInfo
                 }
             })
             // console.log(updatedUser);
@@ -147,7 +149,11 @@ const decrementSuborgURL = async (suborg, next) => {
 //Delete a given sub-organization
 const deleteSuborg = async (suborg, next) => {
     try{
+        console.log("hit1");
+        let suborgToBeDeleted = await Suborg.findOne({ name: suborg.name});
+        console.log(suborgToBeDeleted);
         let deletedSuborg = await Suborg.deleteOne({ name: suborg.name});
+        console.log(deletedSuborg);
         if(!deletedSuborg)
             return next(new AppError("Failed to delete.", 500));
         console.log(`deleted file with name : ${suborg.name}`);
@@ -155,15 +161,29 @@ const deleteSuborg = async (suborg, next) => {
             //expect error
             let deleteURLs = await URL.deleteMany({suborg: suborg.name});
             let user = await User.findById({_id: new ObjectId(suborg.userID)});
-            suborgs = [...user.suborg];
+            let suborgs = [...user.suborg];
             suborgs.splice(suborgs.indexOf(suborg.name), 1);
             console.log(suborgs);
-            let updatedUser = await User.updateOne({_id: suborg.userID}, {
+            let detailSuborgInfo = [...user.suborgInfo];
+            console.log("detailedsuborginfo");
+            console.log(detailSuborgInfo);
+            let index = detailSuborgInfo.findIndex((s) => {
+                return s.name === suborg.name;
+            })
+            // console.log("index1", index1);
+            // console.log("index2", index2);
+            detailSuborgInfo.splice(index, 1)
+            console.log("updation");
+            console.log({ name: suborg.name, description: suborgToBeDeleted.description })
+            console.log(suborgs);
+            console.log(detailSuborgInfo);
+            let updatedUser = await User.findOneAndUpdate({_id: suborg.userID}, {
                 $set: {
-                    suborg: suborgs
-                },
+                    suborg: suborgs,
+                    suborgInfo: detailSuborgInfo              },
                 $inc: { numberOfURLs: -1 * deleteURLs.deletedCount }
             })
+            console.log("everything ok");
             return deletedSuborg;
         }
         else{

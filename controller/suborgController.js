@@ -35,6 +35,31 @@ suborgRouter.post('/', async (req,res,next) => {
 
 suborgRouter.use(checkSuborg);
 
+//Delete a suborg
+suborgRouter.delete('/', async (req,res,next) => {
+    try {
+        let subOrg = {
+            name: req.query.suborg,
+            email: req.user.email,
+            userID: req.user._id
+        }
+        console.log(subOrg);
+        let newSuborgData = await deleteSuborg(subOrg, next);
+        console.log(newSuborgData);
+        if(newSuborgData){
+            res.status(204).json({
+                success: true,
+                message: "Deleted successfully."
+            });
+        }
+
+    }
+    catch(err){
+        next(err);
+    }
+});
+
+
 //Get all suborg URL
 suborgRouter.get('/url', async (req,res,next) => {
     try{
@@ -94,28 +119,6 @@ suborgRouter.delete('/url', async (req,res,next) => {
     }
 });
 
-//Delete a suborg
-suborgRouter.delete('/', async (req,res,next) => {
-    try {
-        let subOrg = {
-            name: req.body.suborgName,
-            email: req.user.email,
-            userID: req.user._id
-        }
-        let newSuborgData = await deleteSuborg(subOrg, next);
-        console.log(newSuborgData);
-        if(newSuborgData){
-            res.status(200).json({
-                success: true,
-                message: "Deleted successfully."
-            });
-        }
-
-    }
-    catch(err){
-        next(err);
-    }
-});
 
 
 module.exports = suborgRouter;

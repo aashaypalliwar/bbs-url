@@ -48,8 +48,14 @@ const SignUp = (props) =>{
                     isError: true,
                     errorMessage: error.response.data.message
                 })
-                setLoading(false);
             }
+            else{
+                setError({
+                    isError: true,
+                    errorMessage: "Something went wrong!"
+                })
+            }
+            setLoading(false);
         })
     }
 

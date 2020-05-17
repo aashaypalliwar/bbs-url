@@ -27,7 +27,8 @@ const reservedUrls = [
     "signup",
     "forgotPassword",
     "changePassword",
-    "verifyEmail"
+    "verifyEmail",
+    "dashboard"
 ];
 
 const clientEndpoints = [

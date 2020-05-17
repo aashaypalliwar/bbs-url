@@ -39,8 +39,10 @@ const Token = (props) =>{
                     name: response.data.data.user.name,
                     email: response.data.data.user.email,
                     suborg: response.data.data.user.suborg,
+                    categories: response.data.data.user.suborgInfo,
                     numberOfURLs: response.data.data.user.numberOfURLs,
-                    expiresAfter: response.data.expiresAfter
+                    expiresAfter: response.data.expiresAfter,
+                    role: response.data.expiresAfter
                 }
                 props.auth(user);
             }
@@ -53,8 +55,14 @@ const Token = (props) =>{
                     isError: true,
                     errorMessage: error.response.data.message
                 })
-                setLoading(false);
             }
+            else{
+                setError({
+                    isError: true,
+                    errorMessage: "Something went wrong!"
+                })
+            }
+            setLoading(false);
         })
     }
     let resendTokenHandler = () => {
@@ -74,12 +82,18 @@ const Token = (props) =>{
                 console.log("resend fail");
                 console.log(error.response.data.message);
                 console.log(error.response.status);
-                setResend(false);
                 setError({
                     isError: true,
                     errorMessage: error.response.data.message
                 })
             }
+            else{
+                setError({
+                    isError: true,
+                    errorMessage: "Something went wrong!"
+                })
+            }
+            setResend(false);
         })
     }
 

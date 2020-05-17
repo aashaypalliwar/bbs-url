@@ -160,8 +160,12 @@ const restrictTo = (...roles) => {
 };
 
 const checkSuborg = (req, res, next) => {
-    if(req.user.suborg.includes(req.body.suborgName)){
-        next();
+    let suborg = req.query.suborg;
+    if(suborg === undefined)
+        suborg = req.body.suborgName;
+    console.log(suborg)
+    if(req.user.suborg.includes(suborg)){
+        next()
     }
     else{
      return next( new AppError('You do not have permission to perform this action', 403));
