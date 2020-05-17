@@ -14,6 +14,8 @@ import { withCookies } from 'react-cookie';
 import axios from 'axios';
 import ChangePassword from "../../components/ChangePassword";
 import ForgotPassword from "../../components/ForgotPassword";
+import ResetPasswordToken from "../../components/ResetPasswordToken";
+import ForgotPassword2 from "../../components/ForgotPassword2";
 
 class Wrapper extends Component {
 
@@ -94,9 +96,10 @@ class Wrapper extends Component {
                 <Route path='/' exact render={ () => (!this.state.authenticated) ? <Guest/>:<Dashboard/>}/>
                 <Route path='/login' exact render={ () => <Login isAuth={this.state.authenticated} auth={this.authHandler}/>} />
                 <Route path='/signup' exact render={ () => <SignUp isAuth={this.state.authenticated}/>} />
-                <Route path='/forgotPassword' exact render={ () => <ForgotPassword auth={this.authHandler}/>} />
+                <Route path='/forgotPassword' exact render={ () => <ForgotPassword2 auth={this.authHandler}/>} />
                 <Route path='/changePassword' exact render={ () => <ChangePassword currentState={this.state} auth={this.authHandler}/>} />
                 <Route path='/verifyEmail' exact render={ () => <Token auth={this.authHandler}/>} />
+                <Route path='/resetPassword' exact render={ () => <ResetPasswordToken auth={this.authHandler}/>} />
             </div>
         );
     }

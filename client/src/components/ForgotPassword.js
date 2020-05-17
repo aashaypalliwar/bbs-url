@@ -14,9 +14,6 @@ class ForgotPassword extends Component {
         isTokenBeingSent: false
     }
     email = React.createRef();
-    token = React.createRef();
-    password = React.createRef();
-    passwordConfirm = React.createRef();
     submitHandler = (event) => {
         event.preventDefault();
         this.setState({isLoading: true});

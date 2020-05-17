@@ -4,13 +4,19 @@ import { useHistory, Link } from 'react-router-dom';
 import axios from 'axios';
 import { withRouter } from "react-router";
 import ErrorAlert from "./ErrorAlert";
+import SuccessAlert from "./SuccessAlert";
 
 const Token = (props) =>{
     const [ errorStatus, setError ] = useState({
         isError: false,
         errorMessage: ""
     })
+    const [ successStatus, setSuccess ] = useState({
+        isSuccess: false,
+        successMessage: ""
+    })
     const [ isLoading, setLoading ] = useState(false);
+    const [ isResending, setResend ] = useState(false);
     let history = useHistory();
     let token = React.createRef();
     if(props.location === undefined){
@@ -52,10 +58,15 @@ const Token = (props) =>{
         })
     }
     let resendTokenHandler = () => {
+        setResend(true)
         axios.post('/api/auth/resendVerificationEmail', {email : props.location.state.email}).then((response)=>{
             console.log(response);
             if(response.status === 200 && response.statusText === 'OK'){
-                token.current.value = "";
+                setSuccess({
+                    isSuccess: true,
+                    successMessage: "Please check your inbox for the new token."
+                })
+                setResend(false);
             }
         }).catch((error)=>{
             console.log(error);
@@ -63,6 +74,11 @@ const Token = (props) =>{
                 console.log("resend fail");
                 console.log(error.response.data.message);
                 console.log(error.response.status);
+                setResend(false);
+                setError({
+                    isError: true,
+                    errorMessage: error.response.data.message
+                })
             }
         })
     }
@@ -84,25 +100,54 @@ const Token = (props) =>{
                             <Form.Control placeholder="Enter Token" ref={token} />
                         </Form.Group>
 
-                        <Button variant="success" style={{backgroundColor: "#093009"}} type="submit" disabled={isLoading}>
+                        <Button variant="success" style={{backgroundColor: "#093009", marginRight: "1rem"}} type="submit" disabled={isLoading || isResending}>
                             {isLoading ? 'Sending…' : 'Submit'}
                         </Button>
-                        <a style={{color: "#093009", fontSize: "0.9rem", margin: "1rem", cursor: "pointer"}} >
-                            <span onClick={resendTokenHandler}>Resend Token</span>
-                        </a>
+                        <Button variant="success" style={{backgroundColor: "#093009"}} onClick={resendTokenHandler} disabled={isLoading || isResending}>
+                            {isResending ? "Resending.." : "Resend Token"}
+                        </Button>
+                        {/*<a style={{color: "#093009", fontSize: "0.9rem", margin: "1rem", cursor: "pointer"}} >*/}
+                        {/*    <span onClick={resendTokenHandler}>Resend Token</span>*/}
+                        {/*</a>*/}
                     </Form>
                 </Col>
             </Row>
-            <Row>
-                <Col md={ {span: 6, offset: 3}} lg={ {span: 4, offset: 4}} sm={ {span: 10, offset:1}} xs={{span:10, offset:1}} style={{paddingLeft: "1.5rem", paddingRight: "1.5rem", paddingTop: "1.5rem", paddingBottom: "2rem", marginTop:"1rem"}}>
-                    { errorStatus.isError ? <ErrorAlert dismiss={() => {
-                        setError({
-                            isError: false,
-                            errorMessage: ""
-                        })
-                    }} message={errorStatus.errorMessage}/> : null }
-                </Col>
-            </Row>
+            {/*<Row>*/}
+            {/*    <Col md={ {span: 6, offset: 3}} lg={ {span: 4, offset: 4}} sm={ {span: 10, offset:1}} xs={{span:10, offset:1}} style={{paddingLeft: "1.5rem", paddingRight: "1.5rem", paddingTop: "1.5rem", paddingBottom: "2rem", marginTop:"1rem"}}>*/}
+            {/*        { errorStatus.isError ? <ErrorAlert dismiss={() => {*/}
+            {/*            setError({*/}
+            {/*                isError: false,*/}
+            {/*                errorMessage: ""*/}
+            {/*            })*/}
+            {/*        }} message={errorStatus.errorMessage}/> : null }*/}
+            {/*    </Col>*/}
+            {/*</Row>*/}
+            { successStatus.isSuccess ?
+                <Row>
+                    <Col md={ {span: 6, offset: 3}} lg={ {span: 4, offset: 4}} sm={ {span: 10, offset:1}} xs={{span:10, offset:1}} style={{paddingLeft: "1.5rem", paddingRight: "1.5rem", paddingTop: "1.5rem", paddingBottom: "2rem", marginTop:"1rem"}}>
+                        <SuccessAlert dismiss={() => {
+                            setSuccess({
+                                isSuccess: false,
+                                successMessage: ""
+                            })
+                        }} message={successStatus.successMessage}/>
+                    </Col>
+                </Row>
+                : null
+            }
+            { errorStatus.isError ?
+                <Row>
+                    <Col md={ {span: 6, offset: 3}} lg={ {span: 4, offset: 4}} sm={ {span: 10, offset:1}} xs={{span:10, offset:1}} style={{paddingLeft: "1.5rem", paddingRight: "1.5rem", paddingTop: "1.5rem", paddingBottom: "2rem", marginTop:"1rem"}}>
+                        <ErrorAlert dismiss={() => {
+                            setError({
+                                isError: false,
+                                errorMessage: ""
+                            })
+                        }} message={errorStatus.errorMessage}/>
+                    </Col>
+                </Row>
+                : null
+            }
         </Container>
     );
 }
