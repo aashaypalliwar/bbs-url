@@ -21,7 +21,7 @@ userRouter.post('/url', async (req,res,next) => {
 
         let newURLData = await createNewShortURL(urlInfo, next);
         if(newURLData) {
-            res.status(200).json({
+            res.status(201).json({
                 newURLData
             });
         }
@@ -31,10 +31,10 @@ userRouter.post('/url', async (req,res,next) => {
     }
 });
 
-// Get all the URLs created by a user
+// Get all uncategorized URLs created by a user
 userRouter.get('/url', async (req,res,next) => {
     try{
-        let URLData = await getURLsByUser(req.user, next);
+        let URLData = await getURLsByUser(req.user, "none", next);
         if(URLData) {
             res.status(200).json({
                 URLData
@@ -64,7 +64,7 @@ userRouter.get('/suborg', async (req,res,next) => {
 //Delete a previously created short URL
 userRouter.delete('/url', async (req,res,next) => {
     try{
-        let deletedURL = await deleteURL(req.body._id, req.user._id, 'none', next);
+        let deletedURL = await deleteURL(req.query.id, req.user._id, 'none', next);
         if(deletedURL) {
             res.status(204).json({
                 status: 'deleted'

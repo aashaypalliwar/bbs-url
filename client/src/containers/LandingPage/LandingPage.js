@@ -6,6 +6,7 @@ import { headingStyle, textStyle, theadStyle, categoryStyle, descriptionStyle, b
 import {Link} from "react-router-dom";
 import CategoryCreator from "../../components/CategoryCreator";
 import CategoryRow from "../../components/CategoryRow";
+import { withRouter } from "react-router";
 
 class LandingPage extends Component {
     constructor(props) {
@@ -38,6 +39,10 @@ class LandingPage extends Component {
         return newState;
     }
 
+    rootHandler = () => {
+        this.props.history.push('/dashboard/root');
+    }
+
     render () {
         return (
             <Container>
@@ -63,7 +68,7 @@ class LandingPage extends Component {
                             </thead>
                             <tbody>
                                 <tr>
-                                    <td style={categoryStyle}>Root</td>
+                                    <td style={categoryStyle} onClick={this.rootHandler}>Root</td>
                                     <td style={descriptionStyle}>All uncategorized short and custom URLs</td>
                                     <td style={descriptionStyle}> </td>
                                 </tr>
@@ -98,4 +103,4 @@ class LandingPage extends Component {
 }
 
 
-export default LandingPage;
+export default withRouter(LandingPage);

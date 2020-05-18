@@ -4,7 +4,16 @@ export const tableStyle = {
 }
 
 export const headingStyle = {
-    fontSize:"1.5rem",
+    fontSize:"1.4rem",
+    paddingBottom: "0",
+    paddingLeft: "0",
+    paddingRight: "0",
+    textAlign:"center",
+    marginTop:"1rem"
+}
+
+export const breadStyle = {
+    fontSize:"1rem",
     paddingBottom: "0",
     paddingLeft: "0",
     paddingRight: "0",
@@ -27,7 +36,7 @@ export const bodyTextStyle = {
     paddingLeft: "0",
     paddingRight: "0",
     marginTop:"1rem",
-    //textAlign:"justify",
+    // textAlign:"center",
 }
 
 export const theadStyle = {
@@ -38,7 +47,7 @@ export const theadStyle = {
     textAlign:"center"
 }
 
-export const categoryStyle = {
+export const linkStyle = {
     fontSize:"1rem",
     paddingLeft: "0",
     paddingRight: "0",
@@ -47,6 +56,17 @@ export const categoryStyle = {
     cursor: "pointer",
     textDecoration: "none"
 }
+
+export const HeadLinkStyle = {
+    fontSize:"1.4rem",
+    paddingLeft: "0",
+    paddingRight: "0",
+    textAlign:"center",
+    color: "green",
+    cursor: "pointer",
+    textDecoration: "none"
+}
+
 export const descriptionStyle = {
     fontSize:"1rem",
     paddingLeft: "0",

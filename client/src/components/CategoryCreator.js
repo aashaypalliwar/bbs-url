@@ -86,7 +86,7 @@ const CategoryCreator = (props) => {
                                 <Form.Control type="text" maxLength={20} placeholder="Category" ref={categoryName}/>
                             </Form.Group>
                             <Form.Group  as={Col} controlId="categoryDescription">
-                                <Form.Control type="text" maxLength={100} placeholder="Description" ref={categoryDescription} />
+                                <Form.Control type="text" maxLength={30} placeholder="Description" ref={categoryDescription} />
                             </Form.Group>
                         </Form.Row>
                         <Button variant="success" style={{backgroundColor: "#093009"}} type="submit" disabled={isLoading}>
