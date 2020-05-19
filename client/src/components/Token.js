@@ -50,7 +50,7 @@ const Token = (props) =>{
                     categories: response.data.data.user.suborgInfo,
                     numberOfURLs: response.data.data.user.numberOfURLs,
                     expiresAfter: response.data.expiresAfter,
-                    role: response.data.expiresAfter
+                    role: response.data.data.user.role
                 }
                 props.auth(user);
             }

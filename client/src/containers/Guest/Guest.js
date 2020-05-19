@@ -28,26 +28,6 @@ class Guest extends Component {
     }
 
 
-    componentDidMount() {
-        console.log("inside cdm");
-        console.log("printing state", this.state);
-        axios.get('/api/user/url', { withCredentials: true})
-            .then((response) => {
-                if(response.status === 200){
-                    console.log(response);
-                    console.log("fetched  url info")
-                    this.setState({URLInfo: response.data.URLData, loadState: "loaded"})
-                    console.log("printing state", this.state);
-                }
-            })
-            .catch((error) => {
-                console.log(error);
-                //throw error
-                console.log("Couldnot fetch data")
-            })
-        console.log("fetch data worked")
-    }
-
     indirectSetState = (newState) => {
         this.setState(newState);
     }

@@ -1,9 +1,8 @@
 import React from 'react';
-import { Navbar, Nav } from 'react-bootstrap';
 import ls from 'local-storage';
 import { useHistory, Link } from 'react-router-dom';
 import { navbarImg, navbarBrand, navLink } from './headerStyle'
-
+import { Navbar, Nav } from 'react-bootstrap';
 
 const Header = (props) => {
     let links = null;

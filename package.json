@@ -1,10 +1,7 @@
 {
   "name": "bbs.url",
   "version": "0.1.0",
-  "private": true,
   "dependencies": {
-    "@testing-library/jest-dom": "^4.2.4",
-    "@testing-library/user-event": "^7.1.2",
     "bcryptjs": "^2.4.3",
     "body-parser": "^1.19.0",
     "cookie-parser": "^1.4.4",
@@ -39,7 +36,6 @@
     ]
   },
   "devDependencies": {
-    "ndb": "^1.1.5",
     "nodemon": "^2.0.2"
   }
 }

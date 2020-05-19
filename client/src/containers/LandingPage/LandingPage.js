@@ -43,6 +43,10 @@ class LandingPage extends Component {
         this.props.history.push('/dashboard/root');
     }
 
+    adminHandler = () => {
+        this.props.history.push('/admin');
+    }
+
     render () {
         return (
             <Container>
@@ -72,6 +76,14 @@ class LandingPage extends Component {
                                     <td style={descriptionStyle}>All uncategorized short and custom URLs</td>
                                     <td style={descriptionStyle}> </td>
                                 </tr>
+                                {
+                                    this.props.appState.role === "admin" ?
+                                    <tr>
+                                        <td style={categoryStyle} onClick={this.adminHandler}>Admin</td>
+                                        <td style={descriptionStyle}>Admin View</td>
+                                        <td style={descriptionStyle}> </td>
+                                    </tr> : null
+                                }
                                 {this.props.appState.categories.map( (category, index) => {
                                     return (
                                         <CategoryRow key={category.name} category={category} set={this.props.set} categories={this.props.appState.categories}/>

@@ -19,6 +19,7 @@ import LandingPage from "../LandingPage/LandingPage";
 import RootCreator from "../../components/RootCreator";
 import RootManager from "../RootManager/RootManager";
 import CategoryManager from "../CategoryManager/CategoryManager";
+import Admin from "../Admin/Admin";
 
 class Wrapper extends Component {
     constructor(props) {
@@ -114,6 +115,7 @@ class Wrapper extends Component {
                 <Route path='/' exact render={ () => (!this.state.authenticated) ? <Guest/>:<Redirect to='/dashboard'/>}/>
                 {/*<Route path='/dashboard' render={ () => (!this.state.authenticated) ? <Redirect to='/'/>:<Dashboard appState={this.state} set={this.indirectStateSetter}/>}/>*/}
                 <Route path='/dashboard' exact render={ () => (!this.state.authenticated) ? <Redirect to='/'/>:<LandingPage appState={this.state} set={this.indirectStateSetter}/>}/>
+                <Route path='/admin' exact render={ () => (this.state.role !== "admin") ? <Redirect to='/'/>:<Admin appState={this.state} set={this.indirectStateSetter}/>}/>
                 <Route path='/dashboard/root' exact render={ () => (!this.state.authenticated) ? <Redirect to='/'/>:<RootManager appState={this.state} set={this.indirectStateSetter}/>}/>
                 <Route path='/dashboard/category/:suborg' exact render={ () => (!this.state.authenticated) ? <Redirect to='/'/>:<CategoryManager appState={this.state} set={this.indirectStateSetter}/>}/>
                 <Route path='/login' exact render={ () => <Login isAuth={this.state.authenticated} auth={this.authHandler}/>} />

@@ -209,6 +209,41 @@ const getURLsBySuborg = async (suborg, next) => {
     }
 };
 
+// Whitelist a Suborg
+const whitelistSuborg = async (id, next) => {
+    try{
+        let updatedSuborgInfo = await Suborg.findByIdAndUpdate(id, {
+            blacklisted: false
+        }, {new : true});
+        await URL.updateMany({suborg: updatedSuborgInfo.name}, {
+            blacklisted: false
+        });
+        if(!updatedSuborgInfo)
+            return next(new AppError("Failed to update user. Please try again.", 500));
+        return updatedSuborgInfo;
+    }
+    catch (err) {
+        next(err);
+    }
+}
+
+const blacklistSuborg = async (id, next) => {
+    try{
+        let updatedSuborgInfo = await Suborg.findByIdAndUpdate(id, {
+            blacklisted: true
+        }, {new : true});
+        await URL.updateMany({suborg: updatedSuborgInfo.name}, {
+            blacklisted: true
+        });
+        if(!updatedSuborgInfo)
+            return next(new AppError("Failed to update user. Please try again.", 500));
+        return updatedSuborgInfo;
+    }
+    catch (err) {
+        next(err);
+    }
+}
+
 module.exports = {
     getAllSuborgs,
     getSuborgInfo,
@@ -217,5 +252,7 @@ module.exports = {
     incrementSuborgURL,
     decrementSuborgURL,
     deleteSuborg,
-    getURLsBySuborg
+    getURLsBySuborg,
+    blacklistSuborg,
+    whitelistSuborg
 };
