@@ -21,16 +21,16 @@ const app = express();
 app.use(helmet());
 app.use(cors());
 
-//Rate limiter
-let limit = 100;
-if(config.NODE_ENV === 'development')
-    limit = 1000;
-const limiter = rateLimit({
-    max: limit,
-    windowMs: 3 * 60 * 60 * 1000,
-    message: 'Too many requests from this IP, please try again after 3 hours!'
-});
-app.use('/', limiter);
+// //Rate limiter
+// let limit = 100;
+// if(config.NODE_ENV === 'development')
+//     limit = 1000;
+// const limiter = rateLimit({
+//     max: limit,
+//     windowMs: 3 * 60 * 60 * 1000,
+//     message: 'Too many requests from this IP, please try again after 3 hours!'
+// });
+// app.use('/', limiter);
 
 // Body parser, reading data from body into req.body
 app.use(express.json({ limit: '10kb' }));

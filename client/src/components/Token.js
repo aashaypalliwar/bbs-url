@@ -39,7 +39,7 @@ const Token = (props) =>{
             email: props.location.state.email,
             verificationToken: token.current.value
         }
-        axios.post('http://localhost:8080/api/auth/verifyEmail', payload).then((response)=>{
+        axios.post('/api/auth/verifyEmail', payload).then((response)=>{
             console.log(response);
             if(response.status === 200 && response.statusText === 'OK'){
                 let user = {
