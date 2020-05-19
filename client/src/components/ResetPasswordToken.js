@@ -31,6 +31,30 @@ const ResetPasswordToken = (props) =>{
     let submitHandler = (event) => {
         event.preventDefault();
         setLoading(true);
+        if(token.current.value === null || token.current.value === undefined || token.current.value === "" ){
+            setError({
+                isError: true,
+                errorMessage: "Name cannot be empty"
+            })
+            setLoading(false);
+            return;
+        }
+        if(password.current.value !== passwordConfirm.current.value){
+            setError({
+                isError: true,
+                errorMessage: "Password and Confirm-Password fields must match"
+            })
+            setLoading(false);
+            return;
+        }
+        if(password.current.value.length < 8){
+            setError({
+                isError: true,
+                errorMessage: "Password should be of at least 8 characters"
+            })
+            setLoading(false);
+            return;
+        }
         axios.post('/api/auth/resetPassword',{
             resetToken: token.current.value,
             password: password.current.value,

@@ -27,6 +27,14 @@ const Token = (props) =>{
     let submitHandler = (event) => {
         event.preventDefault();
         setLoading(true);
+        if(token.current.value === null || token.current.value === undefined || token.current.value === "" ){
+            setError({
+                isError: true,
+                errorMessage: "Token cannot be empty"
+            })
+            setLoading(false);
+            return;
+        }
         let payload = {
             email: props.location.state.email,
             verificationToken: token.current.value
@@ -162,6 +170,7 @@ const Token = (props) =>{
                 </Row>
                 : null
             }
+
         </Container>
     );
 }

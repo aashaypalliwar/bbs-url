@@ -97,6 +97,17 @@ class Guest extends Component {
                         </p>
                     </Col>
                 </Row>
+                <Row>
+                    <Col md={ {span: 6, offset: 3}} lg={ {span: 6, offset: 3}} sm={ {span: 10, offset:1}} xs={ {span: 10, offset:1}} style={{fontSize:"0.85rem",
+                        paddingBottom: "0",
+                        paddingLeft: "0",
+                        paddingRight: "0",
+                        textAlign:"center",
+                        marginTop:"1rem",
+                        marginBottom:"1rem"}}>
+                        Brought to you by <a style={{"color": "green"}} target="_blank" href="https://aashaypalliwar.github.io">Aashay Palliwar</a>
+                    </Col>
+                </Row>
             </Container>
         );
     }

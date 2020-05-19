@@ -143,7 +143,7 @@ const createNewShortURL = async (urlInfo, next) => {
         if(!urlInfo.originalURL.startsWith('https://') && !urlInfo.originalURL.startsWith('http://') && !urlInfo.originalURL.startsWith('ftp://'))
             urlInfo.originalURL = 'https://'+urlInfo.originalURL;
 
-        let isValid = await dnsCheck(urlInfo.originalURL);
+        let isValid = await dnsCheck(urlInfo.originalURL, next);
         if(!isValid){
             return next(new AppError("Original URL doesn't exist", 400));
         }

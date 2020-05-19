@@ -22,6 +22,30 @@ const ChangePassword = (props) =>{
     let submitHandler = (event) => {
         event.preventDefault();
         setLoading(true);
+        if(password.current.value === null || password.current.value === undefined || password.current.value === "" ){
+            setError({
+                isError: true,
+                errorMessage: "Password cannot be empty"
+            })
+            setLoading(false);
+            return;
+        }
+        if(passwordNew.current.value !== passwordConfirm.current.value){
+            setError({
+                isError: true,
+                errorMessage: "Password and Confirm-Password fields must match"
+            })
+            setLoading(false);
+            return;
+        }
+        if(passwordNew.current.value.length < 8){
+            setError({
+                isError: true,
+                errorMessage: "Password should be of at least 8 characters"
+            })
+            setLoading(false);
+            return;
+        }
         axios.post('/api/auth/updatePassword', {
             _id: props.currentState._id,
             password: password.current.value,
@@ -99,6 +123,17 @@ const ChangePassword = (props) =>{
                             errorMessage: ""
                         })
                     }} message={errorStatus.errorMessage}/> : null }
+                </Col>
+            </Row>
+            <Row>
+                <Col md={ {span: 6, offset: 3}} lg={ {span: 6, offset: 3}} sm={ {span: 10, offset:1}} xs={ {span: 10, offset:1}} style={{fontSize:"0.85rem",
+                    paddingBottom: "0",
+                    paddingLeft: "0",
+                    paddingRight: "0",
+                    textAlign:"center",
+                    marginTop:"1rem",
+                    marginBottom:"1rem"}}>
+                    Brought to you by <a style={{"color": "green"}} target="_blank" href="https://aashaypalliwar.github.io">Aashay Palliwar</a>
                 </Col>
             </Row>
         </Container>

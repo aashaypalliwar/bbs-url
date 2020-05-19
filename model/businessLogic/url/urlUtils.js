@@ -3,6 +3,7 @@ let psl = require('psl');
 const { promisify } = require('util');
 const dnsLookup = promisify(dns.lookup);
 const urlRegex = require('url-regex');
+const AppError = require('../../../utils/appError');
 const generate = require('nanoid/generate');
 const URL = require('../../dbModel/urlModel');
 const config = require('../../../utils/config')
@@ -101,19 +102,27 @@ let extractHostname = (url) => {
     return hostname;
 }
 
-const dnsCheck = async (url) => {
+const dnsCheck = async (url, next) => {
     try{
         // const REPLACE_REGEX = /^https?:\/\//i
         // const domain = url.replace(REPLACE_REGEX, '');
         let domain = psl.get(extractHostname(url));
+        console.log(domain);
+        console.log(domain === "bbsurl.in");
+        console.log(typeof domain);
+        if(domain === "bbsurl.in"){
+            throw new AppError("Original URL cannot be another BBS-URL", 403);
+        }
         let URLData = await dnsLookup(domain);
         if(URLData.address)
             return 1;
     }
     catch (err) {
-        // if(err.errno === 'ENOTFOUND');
-        console.log(err);
+        if(err.errno === 'ENOTFOUND'){
             return 0;
+        }
+        console.log(err);
+        return next(err);
     }
 }
 

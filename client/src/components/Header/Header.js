@@ -32,12 +32,12 @@ const Header = (props) => {
 
     return (
         <div style={ navbarImg }>
-            <Navbar variant="dark" expand="lg">
-                <Navbar.Brand style={navbarBrand} href="#home">
+            <Navbar  variant="dark" expand="lg">
+                <Navbar.Brand style={navbarBrand} as={Link} to="/">
                      bbs_url
                 </Navbar.Brand>
                 <Navbar.Toggle aria-controls="basic-navbar-nav" />
-                <Navbar.Collapse>
+                <Navbar.Collapse >
                     { links }
                 </Navbar.Collapse>
             </Navbar>
