@@ -61,9 +61,9 @@ suborgRouter.delete('/', async (req,res,next) => {
 
 
 //Get all suborg URL
-suborgRouter.get('/url', async (req,res,next) => {
+suborgRouter.get('/', async (req,res,next) => {
     try{
-        let URLData = await getURLsBySuborg(req.body.suborgName, next);
+        let URLData = await getURLsBySuborg(req.query.suborg, next);
         if(URLData) {
             res.status(200).json({
                 URLData
@@ -85,12 +85,12 @@ suborgRouter.post('/url', async (req,res,next) => {
             suborg: req.body.suborgName,
             originalURL: req.body.originalURL,
             customURL: req.body.customURL,
-            wantCustom: req.body.wantCustom
+            wantCustom: req.body.wantCustomURL
         }
 
         let newURLData = await createNewSuborgURL(urlInfo, next);
         if(newURLData){
-            res.status(200).json({
+            res.status(201).json({
                 newURLData: newURLData
             });
 
@@ -106,7 +106,7 @@ suborgRouter.post('/url', async (req,res,next) => {
 //Delete a suborg URL
 suborgRouter.delete('/url', async (req,res,next) => {
     try{
-        let deletedURL = await deleteURL(req.body._id, req.user._id, req.body.suborgName, next);
+        let deletedURL = await deleteURL(req.query.id, req.user._id, req.query.suborg, next);
         if(deletedURL) {
             res.status(204).json({
                 status: 'deleted'

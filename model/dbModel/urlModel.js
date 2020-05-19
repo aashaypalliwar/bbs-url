@@ -11,7 +11,7 @@ const urlSchema = new mongoose.Schema({
     },
     userID: {
         type: String,
-        required: [true, "URL's creator must have a valid userID"]
+        default: "Guest"
     },
     suborg: {
         type: String,

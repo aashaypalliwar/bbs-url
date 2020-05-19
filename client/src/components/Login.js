@@ -73,6 +73,11 @@ const Login = (props) =>{
         <Container>
             <Row>
                 <Col md={ {span: 4, offset: 4}} lg={ {span: 6, offset: 3}} sm={ {span: 10}} style={{fontSize:"1.5rem",paddingBottom: "0", paddingLeft: "0", paddingRight: "0", textAlign:"center", marginTop:"1rem"}}>
+                    All your URLs managed at your own dashboard!
+                </Col>
+            </Row>
+            <Row>
+                <Col md={ {span: 4, offset: 4}} lg={ {span: 6, offset: 3}} sm={ {span: 10}} style={{fontSize:"1.5rem",paddingBottom: "0", paddingLeft: "0", paddingRight: "0", textAlign:"center", marginTop:"1rem"}}>
                     Please login to continue
                 </Col>
             </Row>
@@ -82,9 +87,6 @@ const Login = (props) =>{
                         <Form.Group controlId="formBasicEmail">
                             <Form.Label>Email address</Form.Label>
                             <Form.Control type="email" placeholder="Enter email" ref={email}/>
-                            <Form.Text className="text-muted">
-                                We'll never share your email with anyone else.
-                            </Form.Text>
                         </Form.Group>
 
                         <Form.Group controlId="formBasicPassword">

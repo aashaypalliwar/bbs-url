@@ -134,7 +134,7 @@ const incrementSuborgURL = async (suborg, next) => {
 const decrementSuborgURL = async (suborg, next) => {
     try{
         let updatedSuborgInfo = await Suborg.findOneAndUpdate(
-            { _id: suborg._id},
+            { name: suborg},
             { $inc: { numberOfURLs: -1 }  },
             {new: true});
         if(!updatedSuborgInfo)

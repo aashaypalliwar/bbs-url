@@ -63,7 +63,12 @@ const SignUp = (props) =>{
         <Container>
             <Row>
                 <Col md={ {span: 4, offset: 4}} lg={ {span: 6, offset: 3}} sm={ {span: 10}} style={{fontSize:"1.5rem",paddingBottom: "0", paddingLeft: "0", paddingRight: "0", textAlign:"center", marginTop:"1rem"}}>
-                    Please Sign Up to continue
+                    All your URLs managed at your own dashboard!
+                </Col>
+            </Row>
+            <Row>
+                <Col md={ {span: 4, offset: 4}} lg={ {span: 6, offset: 3}} sm={ {span: 10}} style={{fontSize:"1.3rem",paddingBottom: "0", paddingLeft: "0", paddingRight: "0", textAlign:"center", marginTop:"1rem"}}>
+                   With your own email verified account, you get the power to create categorical URLs too!<br/>Please Sign Up to continue
                 </Col>
             </Row>
             <Row>

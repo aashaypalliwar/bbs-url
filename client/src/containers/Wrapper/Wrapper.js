@@ -5,7 +5,7 @@ import ls from 'local-storage';
 import Header from "../../components/Header/Header";
 import {Col, Row, Table} from "react-bootstrap";
 import Dashboard from "../Dashboard/Dashboard";
-import Guest from "../../components/Guest";
+import Guest from "../Guest/Guest";
 import Login from "../../components/Login";
 import SignUp from "../../components/SignUp";
 import Token from "../../components/Token";
@@ -18,6 +18,7 @@ import ForgotPassword from "../../components/ForgotPassword";
 import LandingPage from "../LandingPage/LandingPage";
 import RootCreator from "../../components/RootCreator";
 import RootManager from "../RootManager/RootManager";
+import CategoryManager from "../CategoryManager/CategoryManager";
 
 class Wrapper extends Component {
     constructor(props) {
@@ -113,7 +114,8 @@ class Wrapper extends Component {
                 <Route path='/' exact render={ () => (!this.state.authenticated) ? <Guest/>:<Redirect to='/dashboard'/>}/>
                 {/*<Route path='/dashboard' render={ () => (!this.state.authenticated) ? <Redirect to='/'/>:<Dashboard appState={this.state} set={this.indirectStateSetter}/>}/>*/}
                 <Route path='/dashboard' exact render={ () => (!this.state.authenticated) ? <Redirect to='/'/>:<LandingPage appState={this.state} set={this.indirectStateSetter}/>}/>
-                <Route path='/dashboard/root' render={ () => (!this.state.authenticated) ? <Redirect to='/'/>:<RootManager appState={this.state} set={this.indirectStateSetter}/>}/>
+                <Route path='/dashboard/root' exact render={ () => (!this.state.authenticated) ? <Redirect to='/'/>:<RootManager appState={this.state} set={this.indirectStateSetter}/>}/>
+                <Route path='/dashboard/category/:suborg' exact render={ () => (!this.state.authenticated) ? <Redirect to='/'/>:<CategoryManager appState={this.state} set={this.indirectStateSetter}/>}/>
                 <Route path='/login' exact render={ () => <Login isAuth={this.state.authenticated} auth={this.authHandler}/>} />
                 <Route path='/signup' exact render={ () => <SignUp isAuth={this.state.authenticated}/>} />
                 <Route path='/forgotPassword' exact render={ () => <ForgotPassword auth={this.authHandler}/>} />

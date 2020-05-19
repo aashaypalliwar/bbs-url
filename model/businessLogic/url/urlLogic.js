@@ -2,6 +2,7 @@ const URL = require('../../dbModel/urlModel');
 const User = require('../../dbModel/userModel');
 const AppError = require('../../../utils/appError');
 const validateSuborgUrlUpdate = require('./urlUtils').validateSuborgUrlUpdate;
+const config = require('../../../utils/config');
 const { isReserved, alreadyExist, dnsCheck, generateEndpoint } = require('./urlUtils');
 const { incrementUserURL, decrementUserURL } = require('../userLogic');
 const { incrementSuborgURL, decrementSuborgURL } = require('../suborgLogic');
@@ -73,10 +74,10 @@ const deleteURL = async (id, userID, suborg, next) => {
         await decrementUserURL(userID, next);
         if(suborg !== 'none')
             await decrementSuborgURL(suborg, next);
-        return deletedURL;
+        return true;
     }
     catch(err){
-        next(err);
+        return next(err);
     }
 }
 
@@ -132,10 +133,13 @@ const updateSuborgURL = async (url, newEndpoint, next) => {
 //Create a new short URL
 const createNewShortURL = async (urlInfo, next) => {
     try{
-        let urlCreator = await User.findById(urlInfo.userID);
+        let urlCreator;
+        urlCreator = await User.findById(urlInfo.userID);
         if(urlCreator.blacklisted){
             return new AppError("You are forbidden to perform this action by admin.", 403)
         }
+
+
         if(!urlInfo.originalURL.startsWith('https://') && !urlInfo.originalURL.startsWith('http://') && !urlInfo.originalURL.startsWith('ftp://'))
             urlInfo.originalURL = 'https://'+urlInfo.originalURL;
 
@@ -173,6 +177,7 @@ const createNewShortURL = async (urlInfo, next) => {
         return newURLData;
     }
     catch(err){
+        console.log(err);
         next(err);
     }
 };

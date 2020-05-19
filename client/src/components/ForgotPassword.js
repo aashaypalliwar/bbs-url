@@ -73,16 +73,16 @@ const ForgotPassword = (props) =>{
                         </Button>
                     </Form>
                 </Col>
-                <Row>
-                    <Col md={ {span: 6, offset: 3}} lg={ {span: 4, offset: 4}} sm={ {span: 10, offset:1}} xs={{span:10, offset:1}} style={{paddingLeft: "1.5rem", paddingRight: "1.5rem", paddingTop: "1.5rem", paddingBottom: "2rem", marginTop:"1rem"}}>
-                        { errorStatus.isError ? <ErrorAlert dismiss={() => {
-                            setError({
-                                isError: false,
-                                errorMessage: ""
-                            })
-                        }} message={errorStatus.errorMessage}/> : null }
-                    </Col>
-                </Row>
+            </Row>
+            <Row>
+                <Col md={ {span: 6, offset: 3}} lg={ {span: 4, offset: 4}} sm={ {span: 10, offset:1}} xs={{span:10, offset:1}} style={{paddingLeft: "1.5rem", paddingRight: "1.5rem", paddingTop: "1.5rem", paddingBottom: "2rem", marginTop:"1rem"}}>
+                    { errorStatus.isError ? <ErrorAlert dismiss={() => {
+                        setError({
+                            isError: false,
+                            errorMessage: ""
+                        })
+                    }} message={errorStatus.errorMessage}/> : null }
+                </Col>
             </Row>
         </Container>
     );

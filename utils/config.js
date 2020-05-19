@@ -12,7 +12,7 @@ let MONGODB_URI = process.env.MONGODB_URI || 'mongodb://localhost:27017';
 let JWT_COOKIE_EXPIRES_IN = process.env.JWT_COOKIE_EXPIRES_IN || 2;
 let VERIFICATION_STRING_LENGTH = process.env.VERIFICATION_STRING_LENGTH || 15;
 let LINK_LENGTH = process.env.LINK_LENGTH || 6;
-
+let GUEST_USER_ID = process.env.GUEST_USER_ID || "5ec3a26b9746af6014ecae93" ;
 console.log(PORT);
 
 module.exports = {
@@ -27,5 +27,6 @@ module.exports = {
     EMAIL_PASSWORD,
     JWT_COOKIE_EXPIRES_IN,
     VERIFICATION_STRING_LENGTH,
-    LINK_LENGTH
+    LINK_LENGTH,
+    GUEST_USER_ID
 };
