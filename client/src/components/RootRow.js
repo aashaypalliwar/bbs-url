@@ -23,34 +23,34 @@ const RootRow = (props) => {
     }
 
     let deleteHandler = () => {
-        console.log(props.urls);
+        //console.log(props.urls);
         let urls = clone(props.urls);
         let id = props.url._id;
-        console.log("before req");
+        //console.log("before req");
         setLoading(true);
-        console.log(`/api/user/url?suborg=${props.url._id}`);
+        //console.log(`/api/user/url?suborg=${props.url._id}`);
         axios.delete(`/api/user/url?id=${props.url._id}`, { withCredentials: true} )
             .then((response) => {
-                console.log(response);
+                //console.log(response);
                 if(response.status === 204){
                     // setShowRow(false);
-                    console.log("proceeding to delete");
-                    console.log(props.urls);
-                    console.log(urls);
-                    console.log(id);
+                    //console.log("proceeding to delete");
+                    //console.log(props.urls);
+                    //console.log(urls);
+                    //console.log(id);
                     let index = urls.findIndex((u) => {
                        return u._id === id;
                     });
-                    console.log(index);
+                    //console.log(index);
                     urls.splice(index,1)
-                    console.log("printing categories after deletion");
-                    console.log(urls)
+                    //console.log("printing categories after deletion");
+                    //console.log(urls)
                     props.set({ URLInfo: urls });
                 }
                 // setLoading(false);
                 setShowDelete(false);
             }).catch((error) => {
-                console.log(error);
+                //console.log(error);
                 if (error.response) {
                     console.log(error.response.data.message);
                     console.log(error.response.status);

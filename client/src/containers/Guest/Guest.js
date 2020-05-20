@@ -23,8 +23,8 @@ class Guest extends Component {
             loadState: "loading"
             // status: "pending"
         }
-        console.log("urlconstructor worked");
-        console.log("printing state", this.state);
+        //console.log("urlconstructor worked");
+        //console.log("printing state", this.state);
     }
 
 
@@ -32,7 +32,7 @@ class Guest extends Component {
         this.setState(newState);
     }
 
-    displayState = () => console.log(this.state);
+    displayState = () => console.log(" ");
 
     loading = () => (
         <Row>
@@ -43,7 +43,7 @@ class Guest extends Component {
     );
 
     goBack = () => {
-        console.log("trying to go back");
+        //console.log("trying to go back");
         this.props.history.replace('/');
     }
 

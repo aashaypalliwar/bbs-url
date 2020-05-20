@@ -72,7 +72,7 @@ class Wrapper extends Component {
                 .then(()=>{
                     if(shouldUpdate){
                         this.setState({categories: updatedCategories});
-                        console.log("had to sync category info");
+                        //console.log("had to sync category info");
                     }
                 })
                 .catch((error) => {
@@ -84,7 +84,7 @@ class Wrapper extends Component {
     componentDidUpdate(prevProps, prevState, snapshot) {
         ls.clear();
         ls.set('user', JSON.stringify(this.state));
-        console.log("ls synced");
+        //console.log("synced");
     }
 
     authHandler = (user) => {

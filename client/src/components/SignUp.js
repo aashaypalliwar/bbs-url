@@ -55,16 +55,16 @@ const SignUp = (props) =>{
             passwordConfirm: passwordConfirm.current.value,
             name: name.current.value
         }
-        console.log(payload);
+        //console.log(payload);
         axios.post('/api/auth/signup', payload).then((response)=>{
-            console.log(response);
+            //console.log(response);
             if(response.status === 201 && response.statusText === 'Created'){
                 history.push( {
                     pathname: '/verifyEmail',
                     state: { email: payload.email }});
             }
         }).catch((error)=>{
-            console.log(error);
+            //console.log(error);
             if (error.response) {
                 console.log(error.response.data.message);
                 console.log(error.response.status);

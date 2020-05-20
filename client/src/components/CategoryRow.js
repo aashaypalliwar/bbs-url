@@ -27,37 +27,37 @@ const CategoryRow = (props) => {
     }
 
     let deleteHandler = () => {
-        console.log(props.categories);
+        //console.log(props.categories);
         let categories = clone(props.categories);
         let name = props.category.name;
-        console.log("before req");
+        //console.log("before req");
         setLoading(true);
         let payload = {
             suborgName: props.category.name
         }
-        console.log(`/api/suborg?suborg=${props.category.name}`);
+        //console.log(`/api/suborg?suborg=${props.category.name}`);
         axios.delete(`/api/suborg?suborg=${props.category.name}`, { withCredentials: true} )
             .then((response) => {
-                console.log(response);
+                //console.log(response);
                 if(response.status === 204){
                     // setShowRow(false);
-                    console.log("proceeding to delete");
-                    console.log(props.categories);
-                    console.log(categories);
-                    console.log(name);
+                    //console.log("proceeding to delete");
+                    //console.log(props.categories);
+                   // console.log(categories);
+                    //console.log(name);
                     let index = categories.findIndex((c) => {
                        return c.name === name;
                     });
-                    console.log(index);
+                   // console.log(index);
                     categories.splice(index,1)
-                    console.log("printing categories after deletion");
-                    console.log(categories)
+                    //console.log("printing categories after deletion");
+                    //console.log(categories)
                     props.set({ categories: categories });
                 }
                 // setLoading(false);
                 setShowDelete(false);
             }).catch((error) => {
-            console.log(error);
+            //console.log(error);
             if (error.response) {
                 console.log(error.response.data.message);
                 console.log(error.response.status);

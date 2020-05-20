@@ -27,8 +27,8 @@ const CategoryURLCreator = (props) => {
         setLoading(false);
         setCustom(false);
         originalURL.current.value = "";
-        console.log(originalURL)//.current.value = ""
-        console.log(checkBox);
+        //console.log(originalURL)//.current.value = ""
+        //console.log(checkBox);
     }
 
     let getRefVal = (customRef) => {
@@ -42,20 +42,20 @@ const CategoryURLCreator = (props) => {
         let newURLs = clone(props.urls);
         setLoading(true);
 
-        console.log(originalURL.current.value);
-        console.log(customURL);
-        console.log(checkBox)
-        console.log(getRefVal(customURL));
+        //console.log(originalURL.current.value);
+        //console.log(customURL);
+        //console.log(checkBox)
+        //console.log(getRefVal(customURL));
         let payLoad = {
             originalURL: originalURL.current.value,
             customURL: getRefVal(customURL),
             wantCustomURL: isCustom,
             suborgName: props.category
         }
-        console.log(props);
+        //console.log(props);
         axios.post('/api/suborg/url', payLoad, { withCredentials: true })
             .then((response) => {
-                console.log(response);
+                //console.log(response);
                 if(response.status === 201 && response.statusText === 'Created'){
                     let newURL =
                         {
@@ -73,9 +73,9 @@ const CategoryURLCreator = (props) => {
                         };
 
                     //console.log(props.managerState.URLInfo);
-                    console.log("inside req");
-                    console.log(originalURL);
-                    console.log(customURL);
+                    //console.log("inside req");
+                    //console.log(originalURL);
+                    //console.log(customURL);
                     // console.log(newURL);
                     // console.log(newURLs);
                     newURLs.unshift(newURL);
@@ -86,7 +86,7 @@ const CategoryURLCreator = (props) => {
                 // setLoading(false);
                 // setCustom(false);
             }).catch((error) => {
-                console.log(error);
+                //console.log(error);
                 if (error.response) {
                     console.log(error.response.data.message);
                     console.log(error.response.status);

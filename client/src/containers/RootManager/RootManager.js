@@ -22,36 +22,36 @@ class RootManager extends Component {
             loadState: "loading"
             // status: "pending"
         }
-        console.log("urlconstructor worked");
-        console.log("printing state", this.state);
+        //console.log("urlconstructor worked");
+        //console.log("printing state", this.state);
     }
 
 
     componentDidMount() {
-        console.log("inside cdm");
-        console.log("printing state", this.state);
+        //console.log("inside cdm");
+        //console.log("printing state", this.state);
         axios.get('/api/user/url', { withCredentials: true})
             .then((response) => {
                 if(response.status === 200){
-                    console.log(response);
-                    console.log("fetched  url info")
+                    //console.log(response);
+                    //console.log("fetched  url info")
                     this.setState({URLInfo: response.data.URLData, loadState: "loaded"})
-                    console.log("printing state", this.state);
+                    //console.log("printing state", this.state);
                 }
             })
             .catch((error) => {
-                console.log(error);
+                //console.log(error);
                 //throw error
                 console.log("Couldnot fetch data")
             })
-        console.log("fetch data worked")
+        //console.log("fetch data worked")
     }
 
     indirectSetState = (newState) => {
         this.setState(newState);
     }
 
-    displayState = () => console.log(this.state);
+    displayState = () => console.log(" ");
 
     loading = () => (
         <Row>
@@ -62,7 +62,7 @@ class RootManager extends Component {
     );
 
     goBack = () => {
-        console.log("trying to go back");
+        //console.log("trying to go back");
         this.props.history.replace('/');
     }
 

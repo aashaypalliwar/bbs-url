@@ -40,7 +40,7 @@ const Token = (props) =>{
             verificationToken: token.current.value
         }
         axios.post('/api/auth/verifyEmail', payload).then((response)=>{
-            console.log(response);
+            //console.log(response);
             if(response.status === 200 && response.statusText === 'OK'){
                 let user = {
                     _id: response.data.data.user._id,
@@ -55,7 +55,7 @@ const Token = (props) =>{
                 props.auth(user);
             }
         }).catch((error)=>{
-            console.log(error);
+            //console.log(error);
             if (error.response) {
                 console.log(error.response.data.message);
                 console.log(error.response.status);
@@ -76,7 +76,7 @@ const Token = (props) =>{
     let resendTokenHandler = () => {
         setResend(true)
         axios.post('/api/auth/resendVerificationEmail', {email : props.location.state.email}).then((response)=>{
-            console.log(response);
+            //console.log(response);
             if(response.status === 200 && response.statusText === 'OK'){
                 setSuccess({
                     isSuccess: true,
@@ -85,9 +85,9 @@ const Token = (props) =>{
                 setResend(false);
             }
         }).catch((error)=>{
-            console.log(error);
+            //console.log(error);
             if (error.response) {
-                console.log("resend fail");
+                //console.log("resend fail");
                 console.log(error.response.data.message);
                 console.log(error.response.status);
                 setError({

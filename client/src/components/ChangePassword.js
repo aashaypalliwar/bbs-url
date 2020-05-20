@@ -52,7 +52,7 @@ const ChangePassword = (props) =>{
             passwordNew: passwordNew.current.value,
             passwordConfirm: passwordConfirm.current.value
         }).then((response)=>{
-            console.log(response);
+            //console.log(response);
             if(response.status === 200 && response.statusText === 'OK'){
                 let user = {
                     _id: response.data.data.user._id,
@@ -67,7 +67,7 @@ const ChangePassword = (props) =>{
                 props.auth(user);
             }
         }).catch((error)=>{
-            console.log(error);
+            //console.log(error);
             if (error.response) {
                 console.log(error.response.data.message);
                 console.log(error.response.status);

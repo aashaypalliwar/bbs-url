@@ -27,7 +27,7 @@ const ForgotPassword = (props) =>{
         setLoading(true);
         axios.post('/api/auth/forgotPassword',{email: email.current.value})
             .then((response) => {
-                console.log(response);
+                //console.log(response);
                 if(response.status === 200 && response.data.message === 'Token sent to email!'){
                     history.push( {
                         pathname: '/resetPassword',
@@ -35,7 +35,7 @@ const ForgotPassword = (props) =>{
                 }
             })
             .catch((error) => {
-                console.log(error);
+                //console.log(error);
                 if (error.response) {
                     console.log(error.response.data.message);
                     console.log(error.response.status);

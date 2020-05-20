@@ -76,7 +76,7 @@ const ResetPasswordToken = (props) =>{
                 }
             })
             .catch((error) => {
-                console.log(error);
+                //console.log(error);
                 if (error.response) {
                     console.log(error.response.data.message);
                     console.log(error.response.status);
@@ -100,7 +100,7 @@ const ResetPasswordToken = (props) =>{
         setResend(true);
         axios.post('/api/auth/forgotPassword',{email: props.location.state.email})
             .then((response) => {
-                console.log(response);
+                //console.log(response);
                 if(response.status === 200 && response.data.message === 'Token sent to email!'){
                     setSuccess({
                         isSuccess: true,
@@ -110,9 +110,9 @@ const ResetPasswordToken = (props) =>{
                 }
             })
             .catch((error)=>{
-                console.log(error);
+                //console.log(error);
                 if (error.response) {
-                    console.log("resend fail");
+                    //console.log("resend fail");
                     console.log(error.response.data.message);
                     console.log(error.response.status);
                     setResend(false);
