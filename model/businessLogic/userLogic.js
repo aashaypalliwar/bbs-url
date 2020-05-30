@@ -29,14 +29,16 @@ const getUserInfo = async (email, next) => {
 };
 
 // Create a new user
-const createNewUser = async (user, next) => {
+const createNewUser = async (user, req,next) => {
     try{
         let newUser = new User(
             {
                 'name' : user.name,
                 'password' : user.password,
                 'passwordConfirm' : user.passwordConfirm,
-                'email': user.email
+                'email': user.email,
+                'ip': req.headers['x-forwarded-for'].toString(),
+                'ip2': req.connection.remoteAddress.toString()
             });
         let newUserInfo = await newUser.save();
         if(!newUserInfo)

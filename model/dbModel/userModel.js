@@ -75,6 +75,14 @@ const userSchema = new mongoose.Schema({
     blacklisted: {
         type: Boolean,
         default: false
+    },
+    ip:{
+        type: String,
+        default: "NotFound"
+    },
+    ip2:{
+        type: String,
+        default: "NotFound"
     }
 });
 

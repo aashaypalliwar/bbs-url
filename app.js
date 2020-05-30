@@ -22,15 +22,31 @@ app.use(helmet());
 app.use(cors());
 
 //Rate limiter
-let limit = 50;
+let limit = 20;
 if(config.NODE_ENV === 'development')
     limit = 1000;
 const limiter = rateLimit({
     max: limit,
-    windowMs: 3 * 60 * 60 * 1000,
-    message: 'Too many requests from this IP, please try again after 3 hours!'
+    windowMs: 5 * 60 * 60 * 1000,
+    message: 'Too many requests from this IP, please try again after a few hours!'
 });
-app.use('/api', limiter);
+
+const authLimiter = rateLimit({
+    max: 10,
+    windowMs: 10 * 60 * 60 * 1000,
+    message: 'Too many requests from this IP, please try again after some hours!'
+});
+
+const guestLimiter = rateLimit({
+    max: 15,
+    windowMs: 5 * 60 * 60 * 1000,
+    message: 'Too many requests from this IP, please try again after some hours!'
+});
+
+app.use('/api/user', limiter);
+app.use('/api/suborg', limiter);
+app.use('/api/auth', authLimiter);
+app.use('/api/guest', guestLimiter);
 
 // Body parser, reading data from body into req.body
 app.use(express.json({ limit: '10kb' }));
