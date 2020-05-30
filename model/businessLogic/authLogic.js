@@ -131,6 +131,15 @@ const protect = async (req, res, next) => {
             );
         }
 
+        if (currentUser.blacklisted === true) {
+            return next(
+                new AppError(
+                    'Forbidden. Please contact admin for more information.',
+                    401
+                )
+            );
+        }
+
         // // 4) Check if user changed password after the token was issued
         // if (currentUser.changedPasswordAfter(decoded.iat)) {
         //     return next(
