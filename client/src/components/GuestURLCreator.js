@@ -51,10 +51,10 @@ const GuestURLCreator = (props) => {
         let newURLs = clone(props.urls);
         setLoading(true);
 
-        //console.log(originalURL.current.value);
+        console.log(originalURL.current.value);
         //console.log(customURL);
         //console.log(checkBox)
-        //console.log(getRefVal(customURL));
+        console.log(getRefVal(customURL));
         let payLoad = {
             originalURL: originalURL.current.value,
             customURL: getRefVal(customURL),
@@ -63,7 +63,7 @@ const GuestURLCreator = (props) => {
         //console.log(props);
         axios.post('/api/guest/url', payLoad)
             .then((response) => {
-                //console.log(response);
+                console.log(response);
                 if(response.status === 201 && response.statusText === 'Created'){
                     let newURL =
                         {
@@ -81,14 +81,14 @@ const GuestURLCreator = (props) => {
                         };
 
                     //console.log(props.managerState.URLInfo);
-                    //console.log("inside req");
-                    //console.log(originalURL);
-                    //console.log(customURL);
+                    console.log("inside req");
+                    console.log(originalURL);
+                    console.log(customURL);
                     displayCreatedURL(newURL.shortURLEndPoint);
                     setLoading(false);
                 }
             }).catch((error) => {
-                //console.log(error);
+                console.log(error);
                 if (error.response) {
                     console.log(error.response.data.message);
                     console.log(error.response.status);

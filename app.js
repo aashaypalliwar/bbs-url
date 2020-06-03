@@ -60,6 +60,11 @@ app.use(cookieParser());
 
 app.use(middleware.requestLogger);
 
+// http://bbsurl.in/.well-known/pki-validation/9CCD23DD8E558AD728D095392BF16134.txt
+// app.get('/.well-known/pki-validation/1DBDD4603921F01E48CE4C5D5DDAE51B.txt', (req, res, next) => {
+//     res.sendFile(path.join(__dirname, '/.well-known/pki-validation/1DBDD4603921F01E48CE4C5D5DDAE51B.txt'));
+// })
+
 app.use(express.static(path.join(__dirname, 'client/build')));
 
 app.get('/:clientEndpoint', (req, res, next) => {
@@ -68,7 +73,6 @@ app.get('/:clientEndpoint', (req, res, next) => {
     }else{
         next();
     }
-
 })
 
 // CRUD handler
