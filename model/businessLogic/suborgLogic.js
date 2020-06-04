@@ -54,6 +54,11 @@ const createNewSuborg = async (suborg, next) => {
             return next(new AppError("Requested sub-org name is reserved.", 400));
         }
 
+        let allowedCharacters = /^[A-Za-z0-9_-]*$/;
+        if(!suborg.name.match(allowedCharacters)){
+            return next(new AppError("Only permissible special characters are hyphens and underscores", 400));
+        }
+
         let alreadyExists = await suborgAlreadyExists(suborg.name);
         if(alreadyExists){
             return next(new AppError("Requested sub-org name already in use. Please use a different name.", 400));

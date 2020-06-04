@@ -154,6 +154,12 @@ const createNewShortURL = async (urlInfo, next) => {
             if(isReserved(shortURLEndPoint)){
                 return next(new AppError("The requested custom URL is reserved", 400));
             }
+
+            let allowedCharacters = /^[A-Za-z0-9_-]*$/;
+            if(!shortURLEndPoint.match(allowedCharacters)){
+                return next(new AppError("Only permissible special characters are hyphens and underscores", 400));
+            }
+
             let existsAlready = await alreadyExist(shortURLEndPoint);
             if(existsAlready){
                 return next(new AppError("The requested custom URL already exists", 400));
@@ -199,6 +205,10 @@ const createNewSuborgURL = async (urlInfo, next) => {
 
         let shortURLEndPoint;
         if(urlInfo.wantCustom){
+            let allowedCharacters = /^[A-Za-z0-9_-]*$/;
+            if(!urlInfo.customURL.match(allowedCharacters)){
+                return next(new AppError("Only permissible special characters are hyphens and underscores", 400));
+            }
             shortURLEndPoint = urlInfo.suborg + '/' + urlInfo.customURL;
         }
         else{
