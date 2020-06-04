@@ -58,7 +58,7 @@ const SignUp = (props) =>{
         //console.log(payload);
         axios.post('/api/auth/signup', payload).then((response)=>{
             //console.log(response);
-            if(response.status === 201 && response.statusText === 'Created'){
+            if(response.status === 201){
                 history.push( {
                     pathname: '/verifyEmail',
                     state: { email: payload.email }});

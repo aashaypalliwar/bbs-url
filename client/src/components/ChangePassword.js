@@ -53,7 +53,7 @@ const ChangePassword = (props) =>{
             passwordConfirm: passwordConfirm.current.value
         }).then((response)=>{
             //console.log(response);
-            if(response.status === 200 && response.statusText === 'OK'){
+            if(response.status === 200){
                 let user = {
                     _id: response.data.data.user._id,
                     name: response.data.data.user.name,

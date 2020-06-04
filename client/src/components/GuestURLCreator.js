@@ -64,7 +64,7 @@ const GuestURLCreator = (props) => {
         axios.post('/api/guest/url', payLoad)
             .then((response) => {
                 console.log(response);
-                if(response.status === 201 && response.statusText === 'Created'){
+                if(response.status === 201){
                     let newURL =
                         {
                             _id: response.data.newURLData._id,

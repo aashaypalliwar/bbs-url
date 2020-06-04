@@ -62,7 +62,7 @@ class Wrapper extends Component {
         if(this.state.authenticated){
             axios.get('/api/user/suborg', { withCredentials: true})
                 .then((response) => {
-                    if(response.status === 200 && response.statusText === 'OK'){
+                    if(response.status === 200){
                         if(response.data.categories.length !== this.state.categories.length){
                             shouldUpdate = true;
                             updatedCategories = [...response.data.categories];

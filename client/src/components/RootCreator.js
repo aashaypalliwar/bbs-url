@@ -55,7 +55,7 @@ const RootCreator = (props) => {
         axios.post('/api/user/url', payLoad, { withCredentials: true })
             .then((response) => {
                 //console.log(response);
-                if(response.status === 201 && response.statusText === 'Created'){
+                if(response.status === 201){
                     let newURL =
                         {
                             _id: response.data.newURLData._id,

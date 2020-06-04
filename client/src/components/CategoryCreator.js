@@ -27,7 +27,7 @@ const CategoryCreator = (props) => {
         axios.post('/api/suborg', payLoad, { withCredentials: true })
             .then((response) => {
                 //console.log(response);
-                if(response.status === 201 && response.statusText === 'Created'){
+                if(response.status === 201){
                     let categories = [...props.landingPageState.categories,
                         {
                             _id: response.data.newSuborgData._id,

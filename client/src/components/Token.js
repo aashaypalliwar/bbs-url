@@ -41,7 +41,7 @@ const Token = (props) =>{
         }
         axios.post('/api/auth/verifyEmail', payload).then((response)=>{
             //console.log(response);
-            if(response.status === 200 && response.statusText === 'OK'){
+            if(response.status === 200){
                 let user = {
                     _id: response.data.data.user._id,
                     name: response.data.data.user.name,
@@ -77,7 +77,7 @@ const Token = (props) =>{
         setResend(true)
         axios.post('/api/auth/resendVerificationEmail', {email : props.location.state.email}).then((response)=>{
             //console.log(response);
-            if(response.status === 200 && response.statusText === 'OK'){
+            if(response.status === 200){
                 setSuccess({
                     isSuccess: true,
                     successMessage: "Please check your inbox for the new token."

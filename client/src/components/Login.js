@@ -33,7 +33,7 @@ const Login = (props) =>{
                     pathname: '/verifyEmail',
                     state: { email: payload.email }});
             }
-            else if(response.status === 200 && response.statusText === 'OK'){
+            else if(response.status === 200){
                 let user = {
                     _id: response.data.data.user._id,
                     name: response.data.data.user.name,
