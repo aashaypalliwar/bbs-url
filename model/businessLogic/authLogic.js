@@ -42,7 +42,7 @@ const createSendToken = (user, statusCode, res) => {
     });
 };
 
-const sendVerificationEmail = async (user, statusCode, res) => {
+const sendVerificationEmail = async (user, statusCode, res, next) => {
     try{
         const code = await generate(
             "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890",

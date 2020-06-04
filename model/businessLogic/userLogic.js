@@ -37,8 +37,8 @@ const createNewUser = async (user, req,next) => {
                 'password' : user.password,
                 'passwordConfirm' : user.passwordConfirm,
                 'email': user.email,
-                'ip': req.headers['x-forwarded-for'].toString(),
-                'ip2': req.connection.remoteAddress.toString()
+                'ip': req.headers['x-forwarded-for'],
+                'ip2': req.connection.remoteAddress
             });
         let newUserInfo = await newUser.save();
         if(!newUserInfo)
