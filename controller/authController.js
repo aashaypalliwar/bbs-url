@@ -11,6 +11,7 @@ const {
     resetPassword,
     forgotPassword,
     sendVerificationEmail,
+    informAdmin,
     verifyEmail
 } = require('../model/businessLogic/authLogic');
 // const sendEmail = require('./../utils/email');
@@ -21,6 +22,7 @@ authRouter.post('/signup', async (req, res, next) => {
     try{
         let newUser = await createNewUser(req.body, req, next);
         await sendVerificationEmail(newUser, 201, res, next);
+        await informAdmin(newUser, next);
     }
     catch(err){
         console.log(err);

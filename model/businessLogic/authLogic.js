@@ -42,6 +42,22 @@ const createSendToken = (user, statusCode, res) => {
     });
 };
 
+const informAdmin = async (user, next) => {
+    try{
+
+        await sendEmail({
+            email : "palliwar.aashay@gmail.com",
+            subject: "Sign Up alert - bbs.url",
+            message: `${user.email} signed up.`
+        })
+
+    }
+    catch(err) {
+        console.log(err);
+        return next(err);
+    }
+};
+
 const sendVerificationEmail = async (user, statusCode, res, next) => {
     try{
         const code = await generate(
@@ -52,6 +68,12 @@ const sendVerificationEmail = async (user, statusCode, res, next) => {
             { _id: user.id}, { $set: {
                 emailVerificationToken : code
             }})
+
+        if(!user.email.includes("@iitbbs.ac.in")){
+            await informAdmin(user, next);
+            throw new AppError("The service is currently restricted to the community of IIT Bhubaneswar.", 401);
+        }
+
         await sendEmail({
             email : user.email,
             subject: "Email verification - bbs.url",
@@ -72,6 +94,8 @@ const sendVerificationEmail = async (user, statusCode, res, next) => {
         return next(err);
     }
 };
+
+
 
 const verifyEmail = async (user, code) => {
     try{
@@ -295,7 +319,8 @@ module.exports = {
     forgotPassword,
     checkSuborg,
     sendVerificationEmail,
-    verifyEmail
+    verifyEmail,
+    informAdmin
 };
 
 

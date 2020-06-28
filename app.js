@@ -28,19 +28,19 @@ if(config.NODE_ENV === 'development')
 const limiter = rateLimit({
     max: limit,
     windowMs: 5 * 60 * 60 * 1000,
-    message: 'Too many requests from this IP, please try again after a few hours!'
+    message: 'Too many requests from this IP, please try again after a few time!'
 });
 
 const authLimiter = rateLimit({
     max: 10,
     windowMs: 10 * 60 * 60 * 1000,
-    message: 'Too many requests from this IP, please try again after some hours!'
+    message: 'Too many requests from this IP, please try again after some time!'
 });
 
 const guestLimiter = rateLimit({
     max: 15,
     windowMs: 5 * 60 * 60 * 1000,
-    message: 'Too many requests from this IP, please try again after some hours!'
+    message: 'Too many requests from this IP, please try again after some time!'
 });
 
 app.use('/api/user', limiter);
