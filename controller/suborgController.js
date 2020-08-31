@@ -1,8 +1,6 @@
-const { protect, restrictTo, checkSuborg } = require('../model/businessLogic/authLogic');
+const { protect, checkSuborg } = require('../model/businessLogic/authLogic');
 const { createNewSuborgURL, deleteURL } = require('../model/businessLogic/url/urlLogic');
-const { incrementUserURL } = require('../model/businessLogic/userLogic');
-const { incrementSuborgURL, decrementSuborgURL, createNewSuborg, deleteSuborg, getURLsBySuborg } = require('../model/businessLogic/suborgLogic');
-// const sendEmail = require('./../utils/email');
+const { createNewSuborg, deleteSuborg, getURLsBySuborg } = require('../model/businessLogic/suborgLogic');
 
 const suborgRouter = require('express').Router();
 
@@ -32,7 +30,6 @@ suborgRouter.post('/', async (req,res,next) => {
 });
 
 //only valid sub-org must have power to deal with the same
-
 suborgRouter.use(checkSuborg);
 
 //Delete a suborg

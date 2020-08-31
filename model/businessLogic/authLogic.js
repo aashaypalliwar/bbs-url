@@ -163,15 +163,6 @@ const protect = async (req, res, next) => {
                 )
             );
         }
-
-        // // 4) Check if user changed password after the token was issued
-        // if (currentUser.changedPasswordAfter(decoded.iat)) {
-        //     return next(
-        //         new AppError('User recently changed password! Please log in again.', 401)
-        //     );
-        // }
-
-        // GRANT ACCESS TO PROTECTED ROUTE
         req.user = currentUser;
         next();
     }
@@ -182,7 +173,6 @@ const protect = async (req, res, next) => {
 
 const restrictTo = (...roles) => {
     return (req, res, next) => {
-        // roles ['admin', 'lead-guide']. role='user'
         if (!roles.includes(req.user.role)) {
             return next(
                 new AppError('You do not have permission to perform this action', 403)
@@ -322,5 +312,3 @@ module.exports = {
     verifyEmail,
     informAdmin
 };
-
-

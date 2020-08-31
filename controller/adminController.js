@@ -4,7 +4,6 @@ const { getURLsByUser, whitelistURL, blacklistURL } = require('../model/business
 const { whitelistSuborg, blacklistSuborg } = require('../model/businessLogic/suborgLogic');
 const Suborg = require('../model/dbModel/suborgModel');
 const URL = require('../model/dbModel/urlModel');
-// const sendEmail = require('./../utils/email');
 
 const adminRouter = require('express').Router();
 

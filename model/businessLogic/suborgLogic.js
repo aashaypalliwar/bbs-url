@@ -68,19 +68,13 @@ const createNewSuborg = async (suborg, next) => {
                 name : suborg.name,
                 userID: suborg.userID,
                 description : suborg.description,
-                email: suborg.email,
-                //'shortName': suborg.shortName,
-                //'numberOfURLs': suborg.numberOfURLs
+                email: suborg.email
             });
         let suborgInfo = await newSubOrg.save();
         if(!suborgInfo){
             return next(new AppError("Failed to save.", 500));
         }else{
-            //expect error
             let user = await User.findById({_id: new ObjectId(suborg.userID)}).lean();
-            // console.log(user);
-            // console.log(user.suborg);
-            // console.log(typeof user.suborg);
             let suborgs = [...user.suborg, suborg.name];
             let detailSuborgInfo = [...user.suborgInfo, { name: suborg.name, description: suborg.description }]
             console.log(suborgs);
@@ -90,7 +84,6 @@ const createNewSuborg = async (suborg, next) => {
                     suborgInfo: detailSuborgInfo
                 }
             })
-            // console.log(updatedUser);
             return suborgInfo;
         }
     }

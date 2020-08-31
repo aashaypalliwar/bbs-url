@@ -1,7 +1,6 @@
-const { incrementUserURL, decrementUserURL, getAllSuborgInfo } = require('../model/businessLogic/userLogic');
+const { getAllSuborgInfo } = require('../model/businessLogic/userLogic');
 const { protect } = require('../model/businessLogic/authLogic');
 const { createNewShortURL, getURLsByUser, deleteURL } = require('../model/businessLogic/url/urlLogic');
-// const sendEmail = require('./../utils/email');
 
 const userRouter = require('express').Router();
 

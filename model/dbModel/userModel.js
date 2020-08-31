@@ -41,7 +41,6 @@ const userSchema = new mongoose.Schema({
         type: String,
         required: [true, 'Please confirm your password'],
         validate: {
-            // This only works on CREATE and SAVE!!!
             validator: function(el) {
                 return el === this.password;
             },
@@ -105,11 +104,6 @@ userSchema.pre('save', function(next) {
     next();
 });
 
-// userSchema.pre(/^find/, function(next) {
-//     // this points to the current query
-//     this.find({ active: { $ne: false } });
-//     next();
-// });
 
 userSchema.methods.correctPassword = async function(candidatePassword, userPassword) {
     return await bcrypt.compare(candidatePassword, userPassword);

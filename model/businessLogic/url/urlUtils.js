@@ -9,9 +9,6 @@ const URL = require('../../dbModel/urlModel');
 const config = require('../../../utils/config')
 
 const reservedUrls = [
-    ".well-known/pki-validation/1DBDD4603921F01E48CE4C5D5DDAE51B.txt",
-    ".well-known/pki-validation/",
-    ".well-known",
     "login",
     "logout",
     "signup",

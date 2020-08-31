@@ -7,12 +7,6 @@ const sendEmail = async options => {
     try{
         // 1) Create a transporter
         const transporter = nodemailer.createTransport({
-            // host: config.EMAIL_HOST,
-            // port: config.EMAIL_PORT,
-            // auth: {
-            //     user: config.EMAIL_USERNAME,
-            //     pass: config.EMAIL_PASSWORD
-            // }
             service: 'Gmail',
             auth: {
                 user: config.EMAIL_USERNAME,
@@ -30,7 +24,6 @@ const sendEmail = async options => {
 
         // 3) Actually send the email
         let message = await transporter.sendMail(mailOptions);
-        // console.log(message);
     }
     catch(err){
         console.log(err);

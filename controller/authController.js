@@ -1,9 +1,4 @@
-const crypto = require('crypto');
-const { promisify } = require('util');
-const jwt = require('jsonwebtoken');
-const User = require('../model/dbModel/userModel');
 const AppError = require('../utils/appError');
-const config = require('../utils/config');
 const { createNewUser, getUserInfo } = require('../model/businessLogic/userLogic');
 const {
     createSendToken,
@@ -14,7 +9,6 @@ const {
     informAdmin,
     verifyEmail
 } = require('../model/businessLogic/authLogic');
-// const sendEmail = require('./../utils/email');
 const authRouter = require('express').Router();
 
 
