@@ -36,7 +36,6 @@ export const bodyTextStyle = {
     paddingLeft: "0",
     paddingRight: "0",
     marginTop:"1rem",
-    // textAlign:"center",
 }
 
 export const theadStyle = {

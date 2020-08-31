@@ -18,16 +18,11 @@ const ForgotPassword = (props) =>{
     const [ isLoading, setLoading ] = useState(false);
     let history = useHistory();
 
-    // if(props.isAuth){
-    //     history.replace('/');
-    // }
-
     let submitHandler = (event)=>{
         event.preventDefault();
         setLoading(true);
         axios.post('/api/auth/forgotPassword',{email: email.current.value})
             .then((response) => {
-                //console.log(response);
                 if(response.status === 200 && response.data.message === 'Token sent to email!'){
                     history.push( {
                         pathname: '/resetPassword',
@@ -35,7 +30,6 @@ const ForgotPassword = (props) =>{
                 }
             })
             .catch((error) => {
-                //console.log(error);
                 if (error.response) {
                     console.log(error.response.data.message);
                     console.log(error.response.status);
@@ -89,9 +83,4 @@ const ForgotPassword = (props) =>{
 }
 
 
-
-
 export default ForgotPassword;
-
-
-

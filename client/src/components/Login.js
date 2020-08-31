@@ -44,11 +44,9 @@ const Login = (props) =>{
                     expiresAfter: response.data.expiresAfter,
                     role: response.data.data.user.role
                 }
-                //console.log(user);
                 props.auth(user);
             }
         }).catch((error)=>{
-            //console.log(error);
             if (error.response) {
                 console.log(error.response.data.message);
                 console.log(error.response.status);
@@ -127,10 +125,4 @@ const Login = (props) =>{
     );
 }
 
-
-
-
 export default Login;
-
-
-

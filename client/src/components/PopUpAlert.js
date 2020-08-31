@@ -24,4 +24,3 @@ const PopUpAlert = (props) => {
 }
 
 export default PopUpAlert;
-

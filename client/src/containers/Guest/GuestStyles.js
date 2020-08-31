@@ -88,4 +88,3 @@ export const navLink = {
     color: "#ededed",
     fontWeight: "300"
 }
-

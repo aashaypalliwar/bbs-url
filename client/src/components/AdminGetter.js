@@ -1,5 +1,4 @@
 import {Button, Col, Container, Form, Row} from "react-bootstrap";
-import {textStyle} from "../containers/LandingPage/LandingStyles";
 import React, { useState, useRef } from "react";
 import axios from 'axios';
 import { useHistory } from 'react-router-dom';
@@ -155,5 +154,3 @@ const AdminGetter = (props) => {
 }
 
 export default AdminGetter;
-
-//ref={isCustom? dummy:customURL}

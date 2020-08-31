@@ -21,10 +21,7 @@ class Guest extends Component {
             numberOfURLs: null,
             URLInfo : [],
             loadState: "loading"
-            // status: "pending"
         }
-        //console.log("urlconstructor worked");
-        //console.log("printing state", this.state);
     }
 
 
@@ -43,7 +40,6 @@ class Guest extends Component {
     );
 
     goBack = () => {
-        //console.log("trying to go back");
         this.props.history.replace('/');
     }
 
@@ -92,6 +88,5 @@ class Guest extends Component {
         );
     }
 }
-
 
 export default withRouter(Guest);

@@ -67,7 +67,6 @@ const ChangePassword = (props) =>{
                 props.auth(user);
             }
         }).catch((error)=>{
-            //console.log(error);
             if (error.response) {
                 console.log(error.response.data.message);
                 console.log(error.response.status);
@@ -141,9 +140,4 @@ const ChangePassword = (props) =>{
 }
 
 
-
-
 export default ChangePassword;
-
-
-

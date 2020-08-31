@@ -23,10 +23,8 @@ const CategoryCreator = (props) => {
         }
         categoryName.current.value = "";
         categoryDescription.current.value = "";
-        //console.log(props);
         axios.post('/api/suborg', payLoad, { withCredentials: true })
             .then((response) => {
-                //console.log(response);
                 if(response.status === 201){
                     let categories = [...props.landingPageState.categories,
                         {
@@ -39,7 +37,6 @@ const CategoryCreator = (props) => {
                 }
                 setLoading(false);
             }).catch((error) => {
-                //console.log(error);
                 if (error.response) {
                     console.log(error.response.data.message);
                     console.log(error.response.status);

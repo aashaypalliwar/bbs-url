@@ -1,9 +1,7 @@
 import React, { Component } from 'react';
 
-import {Button, Col, Container, Form, Row, Table} from "react-bootstrap";
-import axios from 'axios';
+import {Col, Container, Row, Table} from "react-bootstrap";
 import { headingStyle, textStyle, theadStyle, categoryStyle, descriptionStyle, bodyTextStyle } from "./LandingStyles";
-import {Link} from "react-router-dom";
 import CategoryCreator from "../../components/CategoryCreator";
 import CategoryRow from "../../components/CategoryRow";
 import { withRouter } from "react-router";
@@ -124,6 +122,5 @@ class LandingPage extends Component {
         );
     }
 }
-
 
 export default withRouter(LandingPage);

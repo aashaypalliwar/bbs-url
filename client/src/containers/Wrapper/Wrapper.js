@@ -3,8 +3,6 @@ import { Route, Redirect } from 'react-router-dom';
 import { withRouter } from "react-router";
 import ls from 'local-storage';
 import Header from "../../components/Header/Header";
-import {Col, Row, Table} from "react-bootstrap";
-import Dashboard from "../Dashboard/Dashboard";
 import Guest from "../Guest/Guest";
 import Login from "../../components/Login";
 import SignUp from "../../components/SignUp";
@@ -16,7 +14,6 @@ import ChangePassword from "../../components/ChangePassword";
 import ResetPasswordToken from "../../components/ResetPasswordToken";
 import ForgotPassword from "../../components/ForgotPassword";
 import LandingPage from "../LandingPage/LandingPage";
-import RootCreator from "../../components/RootCreator";
 import RootManager from "../RootManager/RootManager";
 import CategoryManager from "../CategoryManager/CategoryManager";
 import Admin from "../Admin/Admin";
@@ -52,10 +49,6 @@ class Wrapper extends Component {
         }
     }
 
-    //componentDid mount
-    //if authed get the url data and update state.
-    //if not authed do nothing.
-
     componentDidMount() {
         let shouldUpdate = false;
         let updatedCategories;
@@ -72,7 +65,6 @@ class Wrapper extends Component {
                 .then(()=>{
                     if(shouldUpdate){
                         this.setState({categories: updatedCategories});
-                        //console.log("had to sync category info");
                     }
                 })
                 .catch((error) => {
@@ -84,7 +76,6 @@ class Wrapper extends Component {
     componentDidUpdate(prevProps, prevState, snapshot) {
         ls.clear();
         ls.set('user', JSON.stringify(this.state));
-        //console.log("synced");
     }
 
     authHandler = (user) => {
@@ -128,14 +119,6 @@ class Wrapper extends Component {
         );
     }
 }
-// export default withCookies(Wrapper);
+
 export default withCookies(withRouter(Wrapper));
 
-
-//
-//
-//     "originalURL": "https://www.livemint.com/news/india/maharashtra-coronavirus-positive-cases-jump-to-338-death-toll-at-16-11585799822758.html",
-//     "wantCustomURL": true,
-//     "customURL": "didi"
-// }, { withCredentials: true }).then((res)=>{console.log(res)}).catch((err)=>console.log(err))
-// {/*<Token location={{state: {email: "avp10@iitbbs.ac.in"}}} />*/}

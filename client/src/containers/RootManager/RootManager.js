@@ -20,31 +20,20 @@ class RootManager extends Component {
             numberOfURLs: null,
             URLInfo : [],
             loadState: "loading"
-            // status: "pending"
         }
-        //console.log("urlconstructor worked");
-        //console.log("printing state", this.state);
     }
 
 
     componentDidMount() {
-        //console.log("inside cdm");
-        //console.log("printing state", this.state);
         axios.get('/api/user/url', { withCredentials: true})
             .then((response) => {
                 if(response.status === 200){
-                    //console.log(response);
-                    //console.log("fetched  url info")
                     this.setState({URLInfo: response.data.URLData, loadState: "loaded"})
-                    //console.log("printing state", this.state);
                 }
             })
             .catch((error) => {
-                //console.log(error);
-                //throw error
                 console.log("Couldnot fetch data")
             })
-        //console.log("fetch data worked")
     }
 
     indirectSetState = (newState) => {
@@ -62,7 +51,6 @@ class RootManager extends Component {
     );
 
     goBack = () => {
-        //console.log("trying to go back");
         this.props.history.replace('/');
     }
 
@@ -104,14 +92,6 @@ class RootManager extends Component {
     render () {
         return (
             <Container>
-                {/*<Row>*/}
-                {/*    <Col md={ {span: 4, offset: 4}} lg={ {span: 3, offset: 4}}  sm={ {span: 8, offset:2}} xs={ {span: 8, offset:2}} style={breadStyle}>*/}
-                {/*        <Breadcrumb>*/}
-                {/*            <Breadcrumb.Item >Dashboard</Breadcrumb.Item>*/}
-                {/*            <Breadcrumb.Item active>Root Manager</Breadcrumb.Item>*/}
-                {/*        </Breadcrumb>*/}
-                {/*    </Col>*/}
-                {/*</Row>*/}
                 <Row>
                     <Col md={ {span: 4, offset: 4}} lg={ {span: 6, offset: 3}} sm={ {span: 10, offset:1}} xs={ {span: 10, offset:1}} style={headingStyle}>
                         <span onClick={this.goBack} style={HeadLinkStyle} >Dashboard</span> / Root URL manager
@@ -157,6 +137,5 @@ class RootManager extends Component {
         );
     }
 }
-
 
 export default withRouter(RootManager);

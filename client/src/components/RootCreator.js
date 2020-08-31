@@ -42,19 +42,13 @@ const RootCreator = (props) => {
         let newURLs = clone(props.urls);
         setLoading(true);
 
-        //console.log(originalURL.current.value);
-        //console.log(customURL);
-        //console.log(checkBox)
-        //console.log(getRefVal(customURL));
         let payLoad = {
             originalURL: originalURL.current.value,
             customURL: getRefVal(customURL),
             wantCustomURL: isCustom
         }
-        //console.log(props);
         axios.post('/api/user/url', payLoad, { withCredentials: true })
             .then((response) => {
-                //console.log(response);
                 if(response.status === 201){
                     let newURL =
                         {
@@ -71,21 +65,11 @@ const RootCreator = (props) => {
                             __v: response.data.newURLData.__v
                         };
 
-                    //console.log(props.managerState.URLInfo);
-                    //console.log("inside req");
-                    //console.log(originalURL);
-                    //console.log(customURL);
-                    // console.log(newURL);
-                    // console.log(newURLs);
                     newURLs.unshift(newURL);
-                    // console.log(newURLs)
                     props.set({ URLInfo: newURLs });
                 }
                 resetForm();
-                // setLoading(false);
-                // setCustom(false);
             }).catch((error) => {
-                //console.log(error);
                 if (error.response) {
                     console.log(error.response.data.message);
                     console.log(error.response.status);
@@ -101,7 +85,6 @@ const RootCreator = (props) => {
                     })
                 }
                 resetForm();
-                // setLoading(false);
         })
     }
 
@@ -160,5 +143,3 @@ const RootCreator = (props) => {
 }
 
 export default RootCreator;
-
-//ref={isCustom? dummy:customURL}

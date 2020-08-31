@@ -1,9 +1,7 @@
-import {Button, Col, Container, Form, Row} from "react-bootstrap";
-import {categoryStyle, descriptionStyle, textStyle, deleteStyle, linkStyle} from "../containers/RootManager/RootStyles";
+import { descriptionStyle, textStyle, deleteStyle, linkStyle} from "../containers/RootManager/RootStyles";
 import React, {useState} from "react";
 import axios from 'axios';
 import { useHistory } from 'react-router-dom';
-import ErrorAlert from "./ErrorAlert";
 import PopUpAlert from "./PopUpAlert";
 import { clone } from "ramda"
 
@@ -15,42 +13,26 @@ const RootRow = (props) => {
     })
     const [showDelete, setShowDelete] = useState(false);
     const handleCloseDelete = () => setShowDelete(false);
-    const handleShowDelete = () => setShowDelete(true);
-    let history = useHistory();
 
     let triggerDeleteModal = () => {
         setShowDelete(true);
     }
 
     let deleteHandler = () => {
-        //console.log(props.urls);
         let urls = clone(props.urls);
         let id = props.url._id;
-        //console.log("before req");
         setLoading(true);
-        //console.log(`/api/user/url?suborg=${props.url._id}`);
         axios.delete(`/api/user/url?id=${props.url._id}`, { withCredentials: true} )
             .then((response) => {
-                //console.log(response);
                 if(response.status === 204){
-                    // setShowRow(false);
-                    //console.log("proceeding to delete");
-                    //console.log(props.urls);
-                    //console.log(urls);
-                    //console.log(id);
                     let index = urls.findIndex((u) => {
                        return u._id === id;
                     });
-                    //console.log(index);
                     urls.splice(index,1)
-                    //console.log("printing categories after deletion");
-                    //console.log(urls)
                     props.set({ URLInfo: urls });
                 }
-                // setLoading(false);
                 setShowDelete(false);
             }).catch((error) => {
-                //console.log(error);
                 if (error.response) {
                     console.log(error.response.data.message);
                     console.log(error.response.status);
@@ -70,7 +52,6 @@ const RootRow = (props) => {
     }
 
     return (
-        // showRow ?
         <>
         <tr>
             <td style={descriptionStyle}>{props.index+1}</td>
@@ -98,4 +79,3 @@ const RootRow = (props) => {
 }
 
 export default RootRow;
-

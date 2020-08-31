@@ -1,7 +1,7 @@
 import React from 'react';
 import { Form, Button } from 'react-bootstrap';
 // eslint-disable-next-line
-import { textBlock, textDiv } from './textBoxStyle';
+import { textDiv } from './textBoxStyle';
 
 
 const TextBox = (props) =>{
@@ -17,8 +17,6 @@ const TextBox = (props) =>{
 
     );
 }
-
-
 
 
 export default TextBox;

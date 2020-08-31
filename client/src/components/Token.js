@@ -40,7 +40,6 @@ const Token = (props) =>{
             verificationToken: token.current.value
         }
         axios.post('/api/auth/verifyEmail', payload).then((response)=>{
-            //console.log(response);
             if(response.status === 200){
                 let user = {
                     _id: response.data.data.user._id,
@@ -55,7 +54,6 @@ const Token = (props) =>{
                 props.auth(user);
             }
         }).catch((error)=>{
-            //console.log(error);
             if (error.response) {
                 console.log(error.response.data.message);
                 console.log(error.response.status);
@@ -76,7 +74,6 @@ const Token = (props) =>{
     let resendTokenHandler = () => {
         setResend(true)
         axios.post('/api/auth/resendVerificationEmail', {email : props.location.state.email}).then((response)=>{
-            //console.log(response);
             if(response.status === 200){
                 setSuccess({
                     isSuccess: true,
@@ -85,9 +82,7 @@ const Token = (props) =>{
                 setResend(false);
             }
         }).catch((error)=>{
-            //console.log(error);
             if (error.response) {
-                //console.log("resend fail");
                 console.log(error.response.data.message);
                 console.log(error.response.status);
                 setError({
@@ -134,16 +129,6 @@ const Token = (props) =>{
                     </Form>
                 </Col>
             </Row>
-            {/*<Row>*/}
-            {/*    <Col md={ {span: 6, offset: 3}} lg={ {span: 4, offset: 4}} sm={ {span: 10, offset:1}} xs={{span:10, offset:1}} style={{paddingLeft: "1.5rem", paddingRight: "1.5rem", paddingTop: "1.5rem", paddingBottom: "2rem", marginTop:"1rem"}}>*/}
-            {/*        { errorStatus.isError ? <ErrorAlert dismiss={() => {*/}
-            {/*            setError({*/}
-            {/*                isError: false,*/}
-            {/*                errorMessage: ""*/}
-            {/*            })*/}
-            {/*        }} message={errorStatus.errorMessage}/> : null }*/}
-            {/*    </Col>*/}
-            {/*</Row>*/}
             { successStatus.isSuccess ?
                 <Row>
                     <Col md={ {span: 6, offset: 3}} lg={ {span: 4, offset: 4}} sm={ {span: 10, offset:1}} xs={{span:10, offset:1}} style={{paddingLeft: "1.5rem", paddingRight: "1.5rem", paddingTop: "1.5rem", paddingBottom: "2rem", marginTop:"1rem"}}>
@@ -174,9 +159,6 @@ const Token = (props) =>{
         </Container>
     );
 }
-
-// marginLeft:"1rem",marginRight:"1rem"
-
 
 export default withRouter(Token);
 

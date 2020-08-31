@@ -55,16 +55,13 @@ const SignUp = (props) =>{
             passwordConfirm: passwordConfirm.current.value,
             name: name.current.value
         }
-        //console.log(payload);
         axios.post('/api/auth/signup', payload).then((response)=>{
-            //console.log(response);
             if(response.status === 201){
                 history.push( {
                     pathname: '/verifyEmail',
                     state: { email: payload.email }});
             }
         }).catch((error)=>{
-            //console.log(error);
             if (error.response) {
                 console.log(error.response.data.message);
                 console.log(error.response.status);
@@ -150,10 +147,4 @@ const SignUp = (props) =>{
     );
 }
 
-
-
-
 export default SignUp;
-
-
-

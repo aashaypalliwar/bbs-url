@@ -1,13 +1,9 @@
 import React, { Component } from 'react';
 import { withRouter } from "react-router";
-import {Button, Col, Container, Form, Row, Table} from "react-bootstrap";
+import {Col, Container, Row, Table} from "react-bootstrap";
 import axios from 'axios';
-import { headingStyle, textStyle, theadStyle, categoryStyle, descriptionStyle, bodyTextStyle, breadStyle, linkStyle, HeadLinkStyle } from "./CategoryStyles";
-import {Link} from "react-router-dom";
-import RootCreator from "../../components/RootCreator";
-import RootRow from "../../components/RootRow";
-import CategoryRow from "../../components/CategoryRow";
-import Breadcrumb from "react-bootstrap/Breadcrumb";
+import { headingStyle, textStyle, theadStyle, bodyTextStyle, HeadLinkStyle } from "./CategoryStyles";
+
 import CategoryURLCreator from "../../components/CategoryURLCreator";
 import CategoryURLRow from "../../components/CategoryURLRow";
 
@@ -20,29 +16,19 @@ class CategoryManager extends Component {
             URLInfo : [],
             loadState: "loading"
         }
-        //console.log("categurlconstructor worked");
-        //console.log("printing state", this.state);
     }
 
 
     componentDidMount() {
-        //console.log("inside cdm");
-        //console.log("printing state", this.state);
         axios.get(`/api/suborg/?suborg=${this.props.match.params.suborg}`, { withCredentials: true})
             .then((response) => {
                 if(response.status === 200){
-                    //console.log(response);
-                    //console.log("fetched  url info")
                     this.setState({URLInfo: response.data.URLData, loadState: "loaded"})
-                    //console.log("printing state", this.state);
                 }
             })
             .catch((error) => {
-                //console.log(error);
-                //throw error
                 console.log("Couldnot fetch data")
             })
-        //console.log("fetch data worked")
     }
 
     indirectSetState = (newState) => {
@@ -60,7 +46,6 @@ class CategoryManager extends Component {
     );
 
     goBack = () => {
-        //console.log("trying to go back");
         this.props.history.replace('/');
     }
 
@@ -148,6 +133,5 @@ class CategoryManager extends Component {
         );
     }
 }
-
 
 export default withRouter(CategoryManager);
